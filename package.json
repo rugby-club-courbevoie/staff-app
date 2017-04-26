@@ -1,23 +1,35 @@
 {
-	"name": "RccStaff",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"start": "node node_modules/react-native/local-cli/cli.js start",
-		"start:ios": "react-native run-ios",
-		"test": "jest"
-	},
-	"dependencies": {
-		"react": "16.0.0-alpha.6",
-		"react-native": "0.43.4"
-	},
-	"devDependencies": {
-		"babel-jest": "19.0.0",
-		"babel-preset-react-native": "1.9.1",
-		"jest": "19.0.2",
-		"react-test-renderer": "16.0.0-alpha.6"
-	},
-	"jest": {
-		"preset": "react-native"
-	}
+  "name": "RccStaff",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "watch": "npm run build -- -w",
+    "start:ios": "npm run build && concurrently -r 'npm run watch' 'react-native run-ios'",
+    "tsc": "tsc",
+    "clean": "rimraf artifacts",
+    "build": "npm run clean && npm run tsc --",
+    "lint": "tslint src/**/*.ts",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "16.0.0-alpha.6",
+    "react-native": "0.43.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^19.2.2",
+    "@types/react": "^15.0.23",
+    "@types/react-native": "^0.43.6",
+    "babel-jest": "19.0.0",
+    "babel-preset-react-native": "1.9.1",
+    "concurrently": "^3.4.0",
+    "jest": "19.0.2",
+    "react-test-renderer": "16.0.0-alpha.6",
+    "rimraf": "^2.6.1",
+    "tslint": "^5.1.0",
+    "typescript": "^2.2.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
 }
