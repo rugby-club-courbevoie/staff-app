@@ -12,12 +12,15 @@ import {
   View
 } from 'react-native';
 
-export default class RccStaff extends Component {
+interface Props { }
+interface State { }
+
+export default class RccStaff extends Component<Props, State> {
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native!
+          Welcome to RCC (Android)!
         </Text>
         <Text style={styles.instructions}>
           To get started, edit index.android.js
@@ -31,7 +34,7 @@ export default class RccStaff extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles: any = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',

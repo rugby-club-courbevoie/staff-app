@@ -36,7 +36,7 @@ export default class RccStaff extends React.Component<Props, State> {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to RCC!
+          Welcome to RCC (iOS)!
         </Text>
         <Text style={styles.instructions}>
           To get started, edit index.ios.js
