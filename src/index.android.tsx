@@ -5,30 +5,49 @@
  */
 
 import React, { Component } from 'react';
+import { Landing, LandingMenu } from './landing/landing';
+import { Training } from './training/training'
+import { LoginForm } from './login/loginForm'
 import {
   AppRegistry,
   StyleSheet,
-  Text,
   View
 } from 'react-native';
 
-interface Props { }
-interface State { }
+interface IProps { }
+interface IState {
+  logon?: boolean,
+  menu?: LandingMenu
+}
 
-export default class RccStaff extends Component<Props, State> {
+export default class RccStaff extends Component<IProps, IState> {
+  constructor(props: IProps, context: any) {
+    super(props, context);
+    this.state = {
+
+    };
+  }
+  onLandingCick = (menu: LandingMenu) => {
+    this.setState({
+      menu: menu
+    });
+  }
+  onAuthenticate = () => {
+    this.setState({
+      logon: true
+    });
+  }
+  route() {
+    if (this.state.menu == LandingMenu.training) {
+      return <Training />;
+    }
+    return <Landing onGoTo={this.onLandingCick} />;
+  }
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to RCC (Android)!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
+        {!this.state.logon ? <LoginForm email="email a bruno" password="dsds" onAuthenticate={this.onAuthenticate} /> :
+          this.route()}
       </View>
     );
   }
@@ -36,21 +55,8 @@ export default class RccStaff extends Component<Props, State> {
 
 const styles: any = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  }
 });
 
 AppRegistry.registerComponent('RccStaff', () => RccStaff);
