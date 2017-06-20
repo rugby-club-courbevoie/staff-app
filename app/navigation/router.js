@@ -1,0 +1,78 @@
+import React from 'react';
+import * as css from '../resource/styles';
+import { StackNavigator, DrawerNavigator, DrawerItems } from 'react-navigation';
+import Home from '../screens/home/home';
+import Login from '../screens/login/login';
+import Contacts from '../screens/contact/contacts';
+import ContactDetail from '../screens/contact/contactDetail';
+import MatchCheck from '../screens/matchCheck/matchCheck';
+import Training from '../screens/training/training';
+import PlayerSelect from '../screens/playerSelect/playerSelect';
+import { ScrollView } from 'react-native';
+import { Icon } from 'react-native-elements';
+import LocaleStrings from '../resource/localeStrings';
+
+
+export const ContactStack = StackNavigator({
+  Contacts: {
+    screen: Contacts
+  },
+  Details: {
+    screen: ContactDetail,
+    navigationOptions: ({ navigation }) => ({
+      title: `${navigation.state.params.name.first.toUpperCase()} ${navigation.state.params.name.last.toUpperCase()}`,
+    }),
+  },
+}, { headerMode: 'none' });
+
+export const RootStack = StackNavigator({
+  Home: {
+    screen: Home,
+  },
+  Training: {
+    screen: Training,
+  },
+  PlayerSelect: {
+    screen: PlayerSelect,
+  },
+  MatchCheck: {
+    screen: MatchCheck,
+  },
+  ContactsRoute: {
+    screen: ContactStack,
+  }
+});
+
+const customDrawerComponent = (props) =>
+  <ScrollView
+    style={{
+      flex: 1,
+      backgroundColor: css.drawer.style.backgroundColor,
+    }}>
+    <DrawerItems {...props} />
+  </ScrollView>;
+
+export const RootDrawer = DrawerNavigator({
+  Login: {
+    screen: Login,
+    navigationOptions: {
+      drawerLabel: LocaleStrings.route_connection,
+      drawerIcon: ({ tintColor }) => <Icon name="person" color={tintColor} />,
+    }
+  },
+  HomeRoute: {
+    screen: RootStack,
+    navigationOptions: {
+      drawerLabel: LocaleStrings.route_home,
+      drawerIcon: ({ tintColor }) => <Icon name="home" color={tintColor} />,
+    },
+  }
+}, {
+    contentComponent: customDrawerComponent,
+    drawerPosition: 'left',
+    // styling for for DrawerView.Items in contentOptions
+    contentOptions: css.drawer,
+  },
+);
+
+
