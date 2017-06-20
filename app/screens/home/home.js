@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { List, ListItem } from 'react-native-elements'
 import LocaleStrings from '../../resource/localeStrings';
 import * as LoginController from '../login/loginController';
-
+import { View } from 'react-native';
 
 const screens = [
     {
