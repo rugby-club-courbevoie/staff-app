@@ -2,20 +2,15 @@
 import React, { Component } from 'react';
 import LocaleStrings from '../../resource/localeStrings';
 import { View, Text, ScrollView } from 'react-native';
-import { List, ListItem, Icon } from 'react-native-elements';
-import { users } from '../../resource/data';
+import { List, ListItem } from 'react-native-elements';
+import NavHeader from '../common/navHeader';
+import { users } from '../../resource/data/users';
 import * as css from '../../resource/styles';
-
-const titleAndIcon =
-    <View style={css.header.container}>
-        <Icon name="group" color={css.colors.text_light} />
-        <Text style={css.header.text}>{LocaleStrings.contacts_title}</Text>
-    </View>;
 
 export default class Contacts extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: LocaleStrings.contacts_title,
-        headerTitle: titleAndIcon,
+        headerTitle: (<NavHeader icon="group" title={LocaleStrings.contacts_title} />),
         ...css.header
     });
     onLearnMore = (user) => {

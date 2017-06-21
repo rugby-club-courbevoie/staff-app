@@ -3,12 +3,7 @@ import React, { Component } from 'react';
 import { Button, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 import LocaleStrings from '../../resource/localeStrings';
 import * as LoginController from './loginController';
-
-import {
-    StyleSheet,
-    Text,
-    View
-} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default class LoginForm extends Component {
     constructor(props) {

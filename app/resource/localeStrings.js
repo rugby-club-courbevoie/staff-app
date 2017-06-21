@@ -11,6 +11,7 @@ const LocaleStrings = {
     login_disconnection: "Se déconnecter",
     home_title: "Bienvenue au RCC",
     training_title: 'Entraînement',
+    training_license: 'Licence',
     playerSelect_title: 'Sélection match',
     matchCheck_title: 'Pointage match',
     contacts_title: 'Contacts',

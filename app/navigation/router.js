@@ -7,6 +7,7 @@ import Contacts from '../screens/contact/contacts';
 import ContactDetail from '../screens/contact/contactDetail';
 import MatchCheck from '../screens/matchCheck/matchCheck';
 import Training from '../screens/training/training';
+import TrainingDetail from '../screens/training/trainingDetail';
 import PlayerSelect from '../screens/playerSelect/playerSelect';
 import { ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
@@ -25,12 +26,24 @@ export const ContactStack = StackNavigator({
   },
 }, { headerMode: 'none' });
 
+export const TrainingStack = StackNavigator({
+  Training: {
+    screen: Training
+  },
+  TrainingDetail: {
+    screen: TrainingDetail,
+    navigationOptions: ({ navigation }) => ({
+      title: navigation.state.params.playerName.toUpperCase()
+    }),
+  },
+}, { headerMode: 'none' });
+
 export const RootStack = StackNavigator({
   Home: {
     screen: Home,
   },
   Training: {
-    screen: Training,
+    screen: TrainingStack,
   },
   PlayerSelect: {
     screen: PlayerSelect,

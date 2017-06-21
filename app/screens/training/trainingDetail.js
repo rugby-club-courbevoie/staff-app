@@ -2,50 +2,50 @@
 import React, { Component } from 'react';
 import { ScrollView } from 'react-native';
 import { Tile, List, ListItem } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
+import * as css from '../../resource/styles';
 
-export default class ContactDetail extends Component {
+export default class TrainingDetail extends Component {
     render() {
-        const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
+        const { picture, playerName, present, playerLicense, coachName, excusedBy, excusedReason } = this.props.navigation.state.params;
 
         return (
             <ScrollView>
                 <Tile
                     imageSrc={{ uri: picture.large }}
                     featured
-                    title={`${name.first.toUpperCase()} ${name.last.toUpperCase()}`}
-                    caption={email}
+                    title={playerName}
+                    caption={playerLicense}
                 />
-
                 <List>
                     <ListItem
-                        title="Email"
-                        rightTitle={email}
-                        hideChevron
+                        title="Présent"
+                        rightIcon={{name: present ? "check-box" : "check-box-outline-blank"}}
                     />
                     <ListItem
-                        title="Phone"
-                        rightTitle={phone}
+                        title="Licence"
+                        rightTitle={playerLicense}
                         hideChevron
                     />
                 </List>
 
                 <List>
                     <ListItem
-                        title="Username"
-                        rightTitle={login.username}
+                        title="Entraîneur"
+                        rightTitle={coachName}
                         hideChevron
                     />
                 </List>
 
                 <List>
                     <ListItem
-                        title="Birthday"
-                        rightTitle={dob}
+                        title="Excusé par"
+                        rightTitle={excusedBy}
                         hideChevron
                     />
                     <ListItem
-                        title="City"
-                        rightTitle={location.city}
+                        title="Raison"
+                        rightTitle={excusedReason}
                         hideChevron
                     />
                 </List>
