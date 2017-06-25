@@ -7,16 +7,7 @@ import NavHeader from '../common/navHeader';
 import { players } from '../../resource/data/players';
 import * as css from '../../resource/styles';
 
-const categories = [
-    {
-        label: "Java",
-        value: "java"
-    },
-    {
-        label: "JavaScript",
-        value: "js"
-    }
-];
+const categories = ["U8", "U10", "U12", "U14"].map(s => ({ label: s, value: s}));
 
 export default class Training extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -28,7 +19,7 @@ export default class Training extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            category: "js"
+            category: "U10"
         };
     }
     onLearnMore = (player) => {
@@ -42,20 +33,20 @@ export default class Training extends Component {
             });
         }
         else {
-            fetch('/participants?event=training/match&date=yyyy-mm-dd&category=Unn', {
+            fetch('/participants?event=training&date=yyyy-mm-dd&category=Unn', {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 }
             })
-                .then((response) => response.json())
-                .then((response) => {
+                .then(response => response.json())
+                .then(response => {
                     this.setState({
                         isLoading: false,
                         players: response
                     });
                 })
-                .catch((error) => {
+                .catch(error => {
                     this.setState({
                         isLoading: false,
                     });
@@ -80,10 +71,13 @@ export default class Training extends Component {
                             categories.map((item, index) => <Picker.Item key={index} label={item.label} value={item.value} />)
                         }
                     </Picker>
-                </View >
+                </View>
+    
                 <ScrollView style={{ flex: 1 }}>
                     <List>
-                        {this.state.players.map((player, index) => (
+                        {this.state.players
+                        .filter(player => player.category === this.state.category)
+                        .map((player, index) => (
                             <ListItem
                                 key={index}
                                 roundAvatar
@@ -91,6 +85,7 @@ export default class Training extends Component {
                                 title={player.playerName.toUpperCase()}
                                 subtitle={LocaleStrings.training_license.toUpperCase() + " " + player.playerLicense}
                                 onPress={() => this.onLearnMore(player)}
+                                rightIcon={{name: player.present ? "check-box" : "check-box-outline-blank"}}
                             />
                         ))}
                     </List>
