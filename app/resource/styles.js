@@ -19,7 +19,7 @@ export const colors = {
 // on Android it works as expected (ie NotoSans-Regular)
 export const getFont = () => {
   if (require('react-native').Platform.OS === 'ios') {
-    return 'NotoSans';
+    return 'FontAwesome';
   }
   else {
     return 'NotoSans-Regular';
