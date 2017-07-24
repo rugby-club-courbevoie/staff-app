@@ -8,6 +8,8 @@ import ContactDetail from '../screens/contact/contactDetail';
 import MatchCheck from '../screens/matchCheck/matchCheck';
 import Training from '../screens/training/training';
 import TrainingDetail from '../screens/training/trainingDetail';
+import TrainingOld from '../screens/trainingOld/trainingOld';
+import TrainingOldDetail from '../screens/trainingOld/trainingOldDetail';
 import PlayerSelect from '../screens/playerSelect/playerSelect';
 import { ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
@@ -38,12 +40,26 @@ export const TrainingStack = StackNavigator({
   },
 }, { headerMode: 'none' });
 
+export const TrainingOldStack = StackNavigator({
+  TrainingOld: {
+    screen: TrainingOld
+  },
+  TrainingOldDetail: {
+    screen: TrainingOldDetail,
+    navigationOptions: ({ navigation }) => ({
+      title: navigation.state.params.playerName.toUpperCase()
+    }),
+  },
+}, { headerMode: 'none' });
 export const RootStack = StackNavigator({
   Home: {
     screen: Home,
   },
-  Training: {
+  Training : {
     screen: TrainingStack,
+  },
+  TrainingOld: {
+    screen: TrainingOldStack,
   },
   PlayerSelect: {
     screen: PlayerSelect,
