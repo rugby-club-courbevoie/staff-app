@@ -24,11 +24,11 @@ const screens = [
         title: LocaleStrings.matchCheck_title,
         route: "MatchCheck",
         icon: "assignment-turned-in"
-    }, {
+    },/* {
         title: LocaleStrings.contacts_title,
         route: "ContactsRoute",
         icon: "group"
-    }];
+    }*/];
 
 export default class Home extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({

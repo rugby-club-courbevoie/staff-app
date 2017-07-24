@@ -23,7 +23,7 @@ const categories = [
     }
 ];
 
-const mode_debug= false;
+const mode_debug= true;
 
 export default class Training extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
