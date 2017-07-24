@@ -23,7 +23,7 @@ const categories = [
     }
 ];
 
-const mode_debug= true;
+const mode_debug = true;
 
 export default class Training extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -110,13 +110,20 @@ export default class Training extends Component {
                 });
         }
     }
+    onYearChange = (selectedYear) => {
+        console.log("onYearChange " + selectedYear);
+        this.setState({
+            selectedYear: selectedYear
+        });
+    }
     renderCategory() {
         if (this.state.categories) {
             return <Category
                 categories={this.state.categories}
                 seletectedCategory={this.state.seletectedCategory}
-                seletectedYear={this.state.seletectedYear}
-                onChange={this.onCategoryChange} />
+                selectedYear={this.state.selectedYear}
+                onCategoryChange={this.onCategoryChange}
+                onYearChange={this.onYearChange} />
         }
         else {
             return <View><Text>{this.state.error ? "Chargement échoué" : this.state.loadingMessage}</Text></View>;

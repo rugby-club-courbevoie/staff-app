@@ -10,10 +10,10 @@ import TrainingList from './trainingList';
 
 const styles = StyleSheet.create({
     root: {
-      /*  flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 15,*/
+        /*  flex: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+          padding: 15,*/
     }
 })
 export default class Category extends Component {
@@ -28,15 +28,25 @@ export default class Category extends Component {
             }
         }
     }
-    onChange = (value) => {
-        this.props.onChange(this.props.categories[value]);
+    onCategoryChange = (value) => {
+        this.props.onCategoryChange(this.props.categories[value]);
+    }
+    onYearChange = (value) => {
+        this.props.onYearChange(this.years[value]);
     }
     renderYears() {
         let years = this.years;
-        if (years) {
+        if (years) {            
+            let selectedIndex;
+            for (let year of years) {
+                if (year == this.props.selectedYear) {
+                    selectedIndex = this.years.indexOf(year);
+                    break;
+                }
+            }
             return <ButtonGroup
-                onPress={this.updateIndex}
-                selectedIndex={Math.max(years.indexOf(this.props.selectedYear), 0)}
+                onPress={this.onYearChange}
+                selectedIndex={selectedIndex || 0}
                 buttons={years} />
         }
     }
@@ -44,7 +54,7 @@ export default class Category extends Component {
         return <View style={styles.root}>
             <Picker
                 selectedValue={this.props.categories.indexOf(this.props.seletectedCategory)}
-                onValueChange={this.onChange}>
+                onValueChange={this.onCategoryChange}>
                 {
                     this.props.categories.map((item, index) => <Picker.Item key={index} label={item.name} value={index} />)
                 }
