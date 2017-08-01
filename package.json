@@ -7,11 +7,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "buffer": "^5.0.0",
     "react": "16.0.0-alpha.12",
     "react-native": "0.45.1",
     "react-native-elements": "^0.13.0",
-    "react-native-vector-icons": "^4.2.0",
-    "react-navigation": "^1.0.0-beta.11"
+    "react-native-vector-icons": "^4.3.0",
+    "react-navigation": "^1.0.0-beta.12"
   },
   "devDependencies": {
     "babel-jest": "20.0.3",
