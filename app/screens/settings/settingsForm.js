@@ -6,6 +6,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import * as SettingsController from './settingsController';
 
 export default class Settings extends Component {
+    static navigationOptions = ({ navigation, screenProps }) => ({
+        title: LocaleStrings.settings
+    });
     constructor(props) {
         super(props);
         this.state = {
@@ -56,23 +59,23 @@ export default class Settings extends Component {
                         onChangeText={(text) => this.setState({ server: text })}
                     />
                     <FormValidationMessage>{this.state.error}</FormValidationMessage>
-                    <View style={styles.buttons}>
-                        <Button
-                            onPress={(e) => this.onSubmit(e)}
-                            raised
-                            buttonStyle={{ backgroundColor: '#03a9f4' }}
-                            textStyle={{ textAlign: 'center' }}
-                            title={LocaleStrings.settings_ok}
-                        />
-                        <Button
-                            onPress={(e) => this.onCancel(e)}
-                            raised
-                            buttonStyle={{ backgroundColor: '#03a9f4' }}
-                            textStyle={{ textAlign: 'center' }}
-                            title={LocaleStrings.settings_cancel}
-                        />
-                    </View>
                 </View>
+            </View>
+            <View style={styles.buttons}>
+                <Button
+                    onPress={(e) => this.onSubmit(e)}
+                    raised
+                    buttonStyle={{ backgroundColor: 'steelblue' }}
+                    textStyle={{ textAlign: 'center' }}
+                    title={LocaleStrings.settings_ok}
+                />
+                <Button
+                    onPress={(e) => this.onCancel(e)}
+                    raised
+                    buttonStyle={{ backgroundColor: '#03a9f4' }}
+                    textStyle={{ textAlign: 'center' }}
+                    title={LocaleStrings.settings_cancel}
+                />
             </View>
         </View>;
     }
@@ -91,6 +94,8 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start"
     },
     buttons: {
-
+        flex:1,
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
     }
 });

@@ -93,7 +93,7 @@ export const RootDrawer = DrawerNavigator({
     screen: SettingsForm,
     navigationOptions: {
       drawerLabel: LocaleStrings.settings,
-      drawerIcon: ({ tintColor }) => <Icon name="person" color={tintColor} />,
+      drawerIcon: ({ tintColor }) => <Icon name="settings" color={tintColor} />,
     }
   },
   HomeRoute: {
