@@ -1,4 +1,4 @@
-export const players = [
+export const defined_players = [
   {
     event: "training/match",
     date: "2010-04-01",

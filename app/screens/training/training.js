@@ -4,27 +4,11 @@ import LocaleStrings from '../../resource/localeStrings';
 import { StyleSheet, View, Text, ScrollView, Picker, FormInput } from 'react-native';
 import { List, ListItem, Icon, Button } from 'react-native-elements';
 import NavHeader from '../common/navHeader';
-import { players } from '../../resource/data/players';
 import * as css from '../../resource/styles';
 import TrainingList from './trainingList';
+import * as Controller from './trainingController';
 import Category from './category';
-import * as SettingsController from '../settings/settingsController';
 
-const categories = [
-    {
-        name: "Cat 2000",
-        year1: "2000",
-        year2: "2001"
-    },
-    {
-        name: "Cat 2010",
-        year1: "2010",
-        year2: "2011",
-        year3: "2012"
-    }
-];
-
-const mode_debug = true;
 
 export default class Training extends Component {
     settings;
@@ -40,28 +24,15 @@ export default class Training extends Component {
         };
     }
     componentDidMount() {
-        SettingsController.read((value) => {
-            this.settings = value;
-            if (mode_debug) {
-                setTimeout(() => this.onCategoryChange(categories[0], categories), 200);
+        Controller.fetchCategories((categories, error) => {
+            if (error) {
+                this.setState({
+                    loadingMessage: null,
+                    error: error,
+                });
             }
             else {
-                fetch(this.settings + '/categories', {
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    }
-                })
-                    .then((response) => response.json())
-                    .then((response) => {
-                        this.onCategoryChange(response[0], response);
-                    })
-                    .catch((error) => {
-                        this.setState({
-                            loadingMessage: null,
-                            error: error,
-                        });
-                    });
+                this.onCategoryChange(Controller.getDefaultCategory(categories), categories);
             }
         });
     }
@@ -78,50 +49,36 @@ export default class Training extends Component {
         });
     }
     onCategoryChange = (seletectedCategory, categories) => {
+        let selectedYear = Controller.saveSelectedCategory(seletectedCategory);
         this.setState({
             loadingMessage: LocaleStrings.training_load_in_progress,
             categories: categories || this.state.categories,
             seletectedCategory: seletectedCategory,
-            seletectedYear: seletectedCategory.year1,
+            selectedYear: selectedYear,
             players: []
         });
-        if (mode_debug) {
-            setTimeout(() => {
-                this.setState({
-                    players: players
-                });
-            }, 200);
-        }
-        else {
-            let today = new Date();
-            let todayParam = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-            let coachLicense = "2001091046249";
-            let url = this.settings + '/participants?event=training&date=' + todayParam + '&category=' + seletectedCategory.name + '&coachLicense=' + coachLicense;
-            fetch(url, {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                }
-            })
-                .then((response) => response.json())
-                .then((response) => {
-                    this.setState({
-                        loadingMessage: null,
-                        players: response
-                    });
-                })
-                .catch((error) => {
-                    this.setState({
-                        loadingMessage: null,
-                        error: error,
-                    });
-                });
-        }
+        Controller.fetchPlayers({
+            category: seletectedCategory.name,
+            coachLicense: "2001091046249"
+        }, (players, error) => {
+            let state = {
+                loadingMessage: null
+            };
+            console.log("fetchPlayers result" + players);  
+            if (error) {
+                state.error = error;
+            }
+            else {
+                state.allPlayers = players;
+                state.players = Controller.filterByYear(this.state.selectedYear, players);
+            }
+            this.setState(state);
+        });
     }
     onYearChange = (selectedYear) => {
-        console.log("onYearChange " + selectedYear);
         this.setState({
-            selectedYear: selectedYear
+            selectedYear: selectedYear,
+            players: Controller.filterByYear(selectedYear, this.state.allPlayers)
         });
     }
     renderCategory() {
@@ -153,7 +110,7 @@ export default class Training extends Component {
             }
             else {
                 let msg = LocaleStrings.training_no_players_for_cat.replace("{0}", this.state.seletectedCategory.name);
-                return <View><Text>{msg.replace("{1}", this.state.seletectedYear)}</Text></View>;
+                return <View><Text>{msg.replace("{1}", this.state.selectedYear)}</Text></View>;
             }
         }
     }

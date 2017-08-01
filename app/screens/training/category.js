@@ -1,12 +1,8 @@
 "use strict";
 import React, { Component } from 'react';
-import LocaleStrings from '../../resource/localeStrings';
-import { StyleSheet, View, Text, ScrollView, Picker, FormInput } from 'react-native';
-import { List, ListItem, Icon, Button, ButtonGroup } from 'react-native-elements';
-import NavHeader from '../common/navHeader';
-import { players } from '../../resource/data/players';
+import { StyleSheet, View, Picker } from 'react-native';
+import {  ButtonGroup } from 'react-native-elements';
 import * as css from '../../resource/styles';
-import TrainingList from './trainingList';
 
 const styles = StyleSheet.create({
     root: {

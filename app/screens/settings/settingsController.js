@@ -1,7 +1,7 @@
 import { AsyncStorage } from 'react-native';
 
 const SERVER_KEY = "RCC_APP_SETTINGS";
-const DEFAULT_SERVER = "http://172.16.169.40:8099";
+const DEFAULT_SERVER = "http://54.213.132.224";
 
 let settings;
 

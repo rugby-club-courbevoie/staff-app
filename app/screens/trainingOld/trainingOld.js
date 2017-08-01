@@ -4,7 +4,7 @@ import LocaleStrings from '../../resource/localeStrings';
 import { View, Text, ScrollView, Picker,FormInput } from 'react-native';
 import { List, ListItem, Icon, Button } from 'react-native-elements';
 import NavHeader from '../common/navHeader';
-import { players } from '../../resource/data/players';
+import { defined_players } from '../../resource/data/players';
 import * as css from '../../resource/styles';
 
 const categories = [
