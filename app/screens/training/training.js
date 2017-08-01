@@ -8,6 +8,7 @@ import { players } from '../../resource/data/players';
 import * as css from '../../resource/styles';
 import TrainingList from './trainingList';
 import Category from './category';
+import * as SettingsController from '../settings/settingsController';
 
 const categories = [
     {
@@ -26,6 +27,7 @@ const categories = [
 const mode_debug = true;
 
 export default class Training extends Component {
+    settings;
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: LocaleStrings.training_title,
         headerTitle: (<NavHeader icon="school" title={LocaleStrings.training_title} />),
@@ -34,31 +36,34 @@ export default class Training extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loadingMessage: "Chargement des catégories en cours"
+            loadingMessage: LocaleStrings.training_categories_load_in_progress
         };
     }
     componentDidMount() {
-        if (mode_debug) {
-            setTimeout(() => this.onCategoryChange(categories[0], categories), 200);
-        }
-        else {
-            fetch('http://172.16.169.40:8099/categories', {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                }
-            })
-                .then((response) => response.json())
-                .then((response) => {
-                    this.onCategoryChange(response[0], response);
+        SettingsController.read((value) => {
+            this.settings = value;
+            if (mode_debug) {
+                setTimeout(() => this.onCategoryChange(categories[0], categories), 200);
+            }
+            else {
+                fetch(this.settings + '/categories', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    }
                 })
-                .catch((error) => {
-                    this.setState({
-                        loadingMessage: null,
-                        error: error,
+                    .then((response) => response.json())
+                    .then((response) => {
+                        this.onCategoryChange(response[0], response);
+                    })
+                    .catch((error) => {
+                        this.setState({
+                            loadingMessage: null,
+                            error: error,
+                        });
                     });
-                });
-        }
+            }
+        });
     }
     onSubmit = () => {
 
@@ -74,7 +79,7 @@ export default class Training extends Component {
     }
     onCategoryChange = (seletectedCategory, categories) => {
         this.setState({
-            loadingMessage: "Chargement des participants en cours...",
+            loadingMessage: LocaleStrings.training_load_in_progress,
             categories: categories || this.state.categories,
             seletectedCategory: seletectedCategory,
             seletectedYear: seletectedCategory.year1,
@@ -88,7 +93,10 @@ export default class Training extends Component {
             }, 200);
         }
         else {
-            let url = 'http://172.16.169.40:8099/participants?event=training&date=2017-07-24&category=' + seletectedCategory.name + '&coachLicense=2001091046249';
+            let today = new Date();
+            let todayParam = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+            let coachLicense = "2001091046249";
+            let url = this.settings + '/participants?event=training&date=' + todayParam + '&category=' + seletectedCategory.name + '&coachLicense=' + coachLicense;
             fetch(url, {
                 headers: {
                     'Accept': 'application/json',
@@ -126,7 +134,7 @@ export default class Training extends Component {
                 onYearChange={this.onYearChange} />
         }
         else {
-            return <View><Text>{this.state.error ? "Chargement échoué" : this.state.loadingMessage}</Text></View>;
+            return <View><Text>{this.state.error ? LocaleStrings.training_load_failed : this.state.loadingMessage}</Text></View>;
         }
     }
     renderList() {
@@ -144,7 +152,8 @@ export default class Training extends Component {
                 </View>;
             }
             else {
-                return <View><Text>{"Aucun partipant pour la catégorie '" + this.state.seletectedCategory.name + "' et l'année " + this.state.seletectedYear}</Text></View>;
+                let msg = LocaleStrings.training_no_players_for_cat.replace("{0}", this.state.seletectedCategory.name);
+                return <View><Text>{msg.replace("{1}", this.state.seletectedYear)}</Text></View>;
             }
         }
     }
@@ -155,6 +164,6 @@ export default class Training extends Component {
                 {this.renderList()}
             </View >;
         }
-        return <View><Text>{this.state.error ? "Chargement échoué" : this.state.loadingMessage}</Text></View>;
+        return <View><Text>{this.state.error ? LocaleStrings.training_load_failed : this.state.loadingMessage}</Text></View>;
     }
 }

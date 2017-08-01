@@ -3,6 +3,7 @@ import * as css from '../resource/styles';
 import { StackNavigator, DrawerNavigator, DrawerItems } from 'react-navigation';
 import Home from '../screens/home/home';
 import Login from '../screens/login/login';
+import SettingsForm from '../screens/settings/settingsForm';
 import Contacts from '../screens/contact/contacts';
 import ContactDetail from '../screens/contact/contactDetail';
 import MatchCheck from '../screens/matchCheck/matchCheck';
@@ -14,7 +15,6 @@ import PlayerSelect from '../screens/playerSelect/playerSelect';
 import { ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import LocaleStrings from '../resource/localeStrings';
-
 
 export const ContactStack = StackNavigator({
   Contacts: {
@@ -86,6 +86,13 @@ export const RootDrawer = DrawerNavigator({
     screen: Login,
     navigationOptions: {
       drawerLabel: LocaleStrings.route_connection,
+      drawerIcon: ({ tintColor }) => <Icon name="person" color={tintColor} />,
+    }
+  },
+  SettingsForm: {
+    screen: SettingsForm,
+    navigationOptions: {
+      drawerLabel: LocaleStrings.settings,
       drawerIcon: ({ tintColor }) => <Icon name="person" color={tintColor} />,
     }
   },
