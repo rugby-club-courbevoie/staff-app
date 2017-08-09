@@ -25,6 +25,9 @@ export function postSelection(players, end) {
     let delta = [];
     for (let player of players) {
         delta.push({
+            event: player.event,
+            category: player.category,
+            coachLicense: player.coachLicense,
             playerLicense: player.playerLicense,
             date: player.date,
             present: player.present,

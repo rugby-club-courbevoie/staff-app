@@ -7,7 +7,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import * as Request from '../common/request';
 import { LoadingMessage } from '../common/diagnose';
 
-const mode_debug = true;
+const mode_debug = false;
 
 const DEFAULT_SERVER = "http://54.213.132.224";
 const DEFAULT_EMAIL = mode_debug ? "daniel.coz@sage.com" : "";
