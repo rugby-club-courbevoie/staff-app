@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { List, ListItem } from 'react-native-elements'
 import LocaleStrings from '../../resource/localeStrings';
-import * as LoginController from '../login/loginController';
+import * as SettingsController from '../common/settingsController';
 import { View } from 'react-native';
 
 const screens = [
@@ -38,7 +38,7 @@ export default class Home extends Component {
         super(props);
     }
     componentDidMount() {
-        if (!LoginController.credential) {
+        if (!SettingsController.authenticated()) {
             this.props.navigation.navigate('Login');
         }
     }
@@ -46,7 +46,7 @@ export default class Home extends Component {
         this.props.navigation.navigate(screen.route);
     }
     render() {
-        if (LoginController.credential) {
+        if (SettingsController.authenticated()) {
             return < List containerStyle={{ marginBottom: 20 }}>
                 {
                     screens.map((item) =>

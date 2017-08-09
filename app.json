@@ -1,4 +1,5 @@
 {
-  "name": "rccApp",
-  "displayName": "rccApp"
+  "name": "rcc",
+  "displayName": "RCC",
+  "icon":"rcc.png"
 }

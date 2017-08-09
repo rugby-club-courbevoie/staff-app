@@ -64,7 +64,6 @@ export default class Training extends Component {
             let state = {
                 loadingMessage: null
             };
-            console.log("fetchPlayers result" + players);  
             if (error) {
                 state.error = error;
             }

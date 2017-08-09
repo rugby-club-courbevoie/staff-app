@@ -1,6 +1,6 @@
-import * as SettingsController from '../settings/settingsController';
+import * as SettingsController from '../common/settingsController';
+import * as Request from '../common/request';
 import { defined_players } from '../../resource/data/players';
-import { Buffer } from 'buffer';
 
 const defined_categories = [
     {
@@ -19,11 +19,6 @@ const defined_categories = [
 export let settings;
 const mode_debug = false;
 
-function getAuthorization() {
-    let user = "chabal";
-    let pwd = "RCC-92400-rocks!";
-    return "Basic " + (new Buffer(user + ":" + pwd).toString('base64'));
-}
 export function fetchCategories(end) {
     SettingsController.read((curSettings) => {
         settings = curSettings;
@@ -31,16 +26,7 @@ export function fetchCategories(end) {
             setTimeout(() => end(defined_categories), 1000);
         }
         else {
-            fetch(settings.server + '/categories', {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'authorization': getAuthorization()
-                }
-            })
-                .then((response) => response.json())
-                .then((categories) => end(categories))
-                .catch((error) => end(null, error));
+            Request.get('/categories',end);
         }
     });
 }
@@ -52,20 +38,11 @@ export function fetchPlayers(params, end) {
     }
     let today = new Date();
     let todayParam = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-    let url = settings.server + '/participants?event=training'
+    let url = '/participants?event=training'
         + '&date=' + todayParam
         + '&category=' + params.category
         + '&coachLicense=' + params.coachLicense;
-    console.log("fetchPlayers" + url);  
-    fetch(url, {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'authorization': getAuthorization()
-        }
-    }).then((response) => response.json())
-        .then((players) => end(players))
-        .catch((error) => end(null, error));
+    Request.get(url,end);
 }
 
 let postTimeOut;
@@ -81,6 +58,7 @@ export function postSelection(players, end) {
         setTimeout(() => end(defined_players), 1000);
         return;
     }
+
     fetch(settings.server + './participants', {
         timeout: 1000,
         method: 'POST',
@@ -100,8 +78,7 @@ export function filterByYear(year, players) {
     let filtered = [];
     saveSelectedYear(year);
     if (players) {
-        for (player of players) {
-            console.log(year + JSON.stringify(player));  
+        for (player of players) { 
             if (player.playerLicense && player.playerLicense.indexOf(year) == 0) {
                 filtered.push(player);
             }

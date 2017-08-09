@@ -2,8 +2,7 @@ import React from 'react';
 import * as css from '../resource/styles';
 import { StackNavigator, DrawerNavigator, DrawerItems } from 'react-navigation';
 import Home from '../screens/home/home';
-import Login from '../screens/login/login';
-import SettingsForm from '../screens/settings/settingsForm';
+import LoginForm from '../screens/login/loginForm';
 import Contacts from '../screens/contact/contacts';
 import ContactDetail from '../screens/contact/contactDetail';
 import MatchCheck from '../screens/matchCheck/matchCheck';
@@ -51,11 +50,12 @@ export const TrainingOldStack = StackNavigator({
     }),
   },
 }, { headerMode: 'none' });
+
 export const RootStack = StackNavigator({
   Home: {
     screen: Home,
   },
-  Training : {
+  Training: {
     screen: TrainingStack,
   },
   TrainingOld: {
@@ -83,17 +83,10 @@ const customDrawerComponent = (props) =>
 
 export const RootDrawer = DrawerNavigator({
   Login: {
-    screen: Login,
+    screen: LoginForm,
     navigationOptions: {
       drawerLabel: LocaleStrings.route_connection,
       drawerIcon: ({ tintColor }) => <Icon name="person" color={tintColor} />,
-    }
-  },
-  SettingsForm: {
-    screen: SettingsForm,
-    navigationOptions: {
-      drawerLabel: LocaleStrings.settings,
-      drawerIcon: ({ tintColor }) => <Icon name="settings" color={tintColor} />,
     }
   },
   HomeRoute: {
