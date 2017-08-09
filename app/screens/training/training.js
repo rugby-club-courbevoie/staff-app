@@ -7,13 +7,11 @@ import NavHeader from '../common/navHeader';
 import * as css from '../../resource/styles';
 import TrainingList from './trainingList';
 import * as Controller from './trainingController';
-import * as SettingsController from '../common/settingsController';
 import { Diagnose, LoadingMessage } from '../common/diagnose';
 
 import Category from './category';
 
 export default class Training extends Component {
-    settings;
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: LocaleStrings.training_title,
         headerTitle: (<NavHeader icon="school" title={LocaleStrings.training_title} />),
@@ -48,6 +46,7 @@ export default class Training extends Component {
         });
     }
     onPlayerShowDetail = (player) => {
+        console.log("onPlayerShowDetail " + JSON.stringify(player));
         this.props.navigation.navigate('TrainingDetail', { ...player });
     }
     onPlayerCheckPress = (player) => {
@@ -66,10 +65,7 @@ export default class Training extends Component {
             selectedYear: selectedYear,
             players: []
         });
-        Controller.fetchPlayers({
-            category: seletectedCategory.name,
-            coachLicense: SettingsController.settings.coachLicense
-        }, (players, error) => {
+        Controller.fetchPlayers(seletectedCategory.name, (players, error) => {
             let state = {
                 loadingMessage: null
             };

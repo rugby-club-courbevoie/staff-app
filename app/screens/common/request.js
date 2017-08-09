@@ -2,8 +2,12 @@
 import { Buffer } from 'buffer';
 let settings;
 
-export function setSettings(newSettings) {
-    settings = newSettings;
+export function setSettings(props) {
+    settings = {
+        email: props.email,
+        password: props.password,
+        server: props.server
+    };
 }
 
 function getAuthorization() {
@@ -29,7 +33,7 @@ export function put(url, data, end) {
     };
     if (data) {
         props.body = JSON.stringify(data);
-        console.log("PUT"  + props.body);
+        console.log("PUT" + props.body);
     }
     send(url, props, end);
 }
@@ -47,7 +51,7 @@ function send(url, props, end) {
         .then((response) => {
             switch (response.status) {
                 case 200:
-                    response.json().then((data) =>end(data));
+                    response.json().then((data) => end(data));
                     break;
                 case 401:
                     response.json().then((data) => {

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { List, ListItem } from 'react-native-elements'
 import LocaleStrings from '../../resource/localeStrings';
-import * as SettingsController from '../common/settingsController';
+import { rccConfig } from '../common/config';
 import { View } from 'react-native';
 
 const screens = [
@@ -34,11 +34,8 @@ export default class Home extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: LocaleStrings.home_title,
     });
-    constructor(props) {
-        super(props);
-    }
     componentDidMount() {
-        if (!SettingsController.authenticated()) {
+        if (!rccConfig.authenticated) {
             this.props.navigation.navigate('Login');
         }
     }
@@ -46,21 +43,17 @@ export default class Home extends Component {
         this.props.navigation.navigate(screen.route);
     }
     render() {
-        if (SettingsController.authenticated()) {
-            return < List containerStyle={{ marginBottom: 20 }}>
-                {
-                    screens.map((item) =>
-                        <ListItem
-                            key={item.route}
-                            title={item.title}
-                            leftIcon={{ name: item.icon }}
-                            onPress={() => this.onGoTo(item)}
-                        />
-                    )}
-            </List >
+        if (rccConfig.authenticated) {
+            return <List containerStyle={{ marginBottom: 20 }}>
+                {screens.map((item) =>
+                    <ListItem
+                        key={item.route}
+                        title={item.title}
+                        leftIcon={{ name: item.icon }}
+                        onPress={() => this.onGoTo(item)} />
+                )}
+            </List>
         }
-        else {
-            return <View />;
-        }
+        return <View />;
     }
 }

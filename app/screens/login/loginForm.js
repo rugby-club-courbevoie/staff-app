@@ -2,50 +2,37 @@
 import React, { Component } from 'react';
 import { Button, FormLabel, FormInput, FormValidationMessage, Icon } from 'react-native-elements';
 import LocaleStrings from '../../resource/localeStrings';
-import * as SettingsController from '../common/settingsController';
+import { rccConfig } from '../common/config';
 import { StyleSheet, Text, View } from 'react-native';
 import * as Request from '../common/request';
 import { LoadingMessage } from '../common/diagnose';
 
-const mode_debug = false;
-
-const DEFAULT_SERVER = "http://54.213.132.224";
-const DEFAULT_EMAIL = mode_debug ? "daniel.coz@sage.com" : "";
-const DEFAULT_PASSWORD = mode_debug ? "RCC-92200" : "";
-const DEFAULT_COACH = mode_debug ? "2001091046249" : "";
-
-
 export default class LoginForm extends Component {
     constructor(props) {
         super(props);
-        this.state = this.initState();
-        if (mode_debug) {
-            SettingsController.write(this.initState());
-        }
-        this.state.init = false;
-        this.state.error = "";
+        this.state = this.buildState(false);
     }
-    initState() {
-        let settings = SettingsController.settings;
-        let state = {
-            email: (settings && settings.email) || DEFAULT_EMAIL,
-            password: (settings && settings.password) || DEFAULT_PASSWORD,
-            confirmPassword: DEFAULT_PASSWORD,
-            server: (settings && settings.server) || DEFAULT_SERVER,
-            coachLicense: (settings && settings.coachLicense) || DEFAULT_COACH
-        }
+    buildState(init) {
+        let state =  {
+            init: init,
+            error: "",
+            email: rccConfig.email,
+            password: rccConfig.password,
+            confirmPassword: rccConfig.modeDebug ? rccConfig.password : "",
+            server: rccConfig.server,
+            coachLicense: rccConfig.coachLicense
+        };
+        //console.warn(JSON.stringify(state));
         return state;
     }
     componentDidMount() {
         if (!this.state.init) {
-            SettingsController.read((settings) => {
-                if (SettingsController.authenticated()) {
+            rccConfig.read(() => {
+                if (rccConfig.authenticated) {
                     this.onAuthenticate();
                 }
                 else {
-                    let state = this.initState();
-                    state.init = true;
-                    this.setState(state);
+                    this.setState(this.buildState(true));
                 }
             });
         }
@@ -82,15 +69,15 @@ export default class LoginForm extends Component {
         event.preventDefault();
     }
     onAuthenticate() {
-        Request.setSettings(SettingsController.settings);
+        Request.setSettings(rccConfig);
         this.props.navigation.navigate('HomeRoute');
     }
-    save(newsettings) {
+    save(data) {
         this.setState({
             authenticationRequested: true,
             error: ""
         });
-        Request.setSettings(newsettings);
+        Request.setSettings(data);
         Request.post("/changePassword", undefined, (result, error) => {
             let errorMessage = error && error.message;
             if (errorMessage) {
@@ -100,15 +87,18 @@ export default class LoginForm extends Component {
                 });
             }
             else {
-                newsettings.coachLicense = result.license;
-                SettingsController.write(newsettings);
+                rccConfig.server = data.server;
+                rccConfig.email = data.email;
+                rccConfig.password = data.password;
+                rccConfig.coachLicense = result.license;
+                rccConfig.write();
                 this.onAuthenticate();
             }
         });
     }
     renderMessage() {
         if (this.state.authenticationRequested || !this.state.init) {
-            return <LoadingMessage message={LocaleStrings.login_validation}/>;
+            return <LoadingMessage message={LocaleStrings.login_validation} />;
         }
         else {
             return <FormValidationMessage>{this.state.error}</FormValidationMessage>;

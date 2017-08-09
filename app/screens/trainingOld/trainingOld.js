@@ -32,6 +32,7 @@ export default class TrainingOld extends Component {
         };
     }
     onLearnMore = (player) => {
+        console.log("onLearnMore " + JSON.stringify(player));
         this.props.navigation.navigate('TrainingDetail', { ...player });
     };
     componentDidMount() {

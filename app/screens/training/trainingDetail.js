@@ -18,16 +18,6 @@ export default class TrainingDetail extends Component {
     }
     //{this.renderPicture(picture, playerName, playerLicense)}
     render() {
-        return <ScrollView>
-             <List>
-                <ListItem
-                    title="Entraîneur"
-                    rightTitle={coachName || ""}
-                    hideChevron/>
-            </List>
-        </ScrollView>;
-    }
-    renderrr() {
         const { picture, playerName, present, playerLicense, coachName, excusedBy, excusedReason } = this.props.navigation.state.params;
         return <ScrollView>
             <List>
@@ -39,22 +29,22 @@ export default class TrainingDetail extends Component {
                     rightTitle={playerLicense || ""}
                     hideChevron/>
             </List>
-            <List>
+             <List>
                 <ListItem
                     title="Entraîneur"
                     rightTitle={coachName || ""}
                     hideChevron/>
-            </List>
-            <List>
-                <ListItem
-                    title="Excusé par"
-                    rightTitle={excusedBy || ""}
-                    hideChevron/>
-                <ListItem
+            </List>             
+        </ScrollView>;
+    }
+    renderrr() {
+        const { picture, playerName, present, playerLicense, coachName, excusedBy, excusedReason } = this.props.navigation.state.params;
+        return <ScrollView>
+            <ListItem
                     title="Raison"
                     rightTitle={excusedReason || ""}
                     hideChevron/>
-            </List>
+            
         </ScrollView>;
     }
 }

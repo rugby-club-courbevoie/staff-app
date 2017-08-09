@@ -1,27 +1,23 @@
-import * as SettingsController from '../common/settingsController';
+"use strict";
+import { rccConfig } from '../common/config';
 import * as Request from '../common/request';
 
 export let settings;
 
 export function fetchCategories(end) {
-    SettingsController.read((curSettings) => {
-        settings = curSettings;
-        Request.get('/categories', end);
-    });
+    Request.get('/categories', end);
 }
 
-export function fetchPlayers(params, end) {
+export function fetchPlayers(category, end) {
     let url = '/presences?event=training'
         + '&date=' + new Date().toISOString().substring(0, 10)
-        + '&category=' + params.category
-        + '&coachLicense=' + params.coachLicense;
+        + '&category=' + category
+        + '&coachLicense=' + rccConfig.coachLicense;
+    console.log()
     Request.get(url, end);
 }
 
-let postTimeOut;
-
 export function postSelection(players, end) {
-    clearTimeout(postTimeOut);
     let delta = [];
     for (let player of players) {
         delta.push({
@@ -40,7 +36,7 @@ export function filterByYear(year, players) {
     let filtered = [];
     saveSelectedYear(year);
     if (players) {
-        for (player of players) {
+        for (let player of players) {
             if (player.playerLicense && player.playerLicense.indexOf(year) == 0) {
                 filtered.push(player);
             }
@@ -50,7 +46,7 @@ export function filterByYear(year, players) {
 }
 
 export function getDefaultCategory(categories) {
-    let training = settings.training = settings.training || {};
+    let training = rccConfig.training;
     if (training.category) {
         for (let category of categories) {
             if (training.category == category.name) {
@@ -61,9 +57,9 @@ export function getDefaultCategory(categories) {
     return categories[0];
 }
 export function getDefaultYear(category) {
-    let defYear;
-    if (settings.training && settings.training.category) {
-        defYear = settings.training.year;
+    let training = rccConfig.training;
+    if (training.category) {
+        let defYear = training.year;
         if (defYear
             && ((defYear == category.year1)
                 || (defYear == category.year2)
@@ -74,18 +70,18 @@ export function getDefaultYear(category) {
     return category.year1;
 }
 export function saveSelectedCategory(category) {
-    let training = settings.training = settings.training || {};
+    let training = rccConfig.training;
     if (training.category != category) {
         training.category = category.name;
         training.year = getDefaultYear(category);
-        SettingsController.write(settings);
+        rccConfig.write();
     }
     return training.year;
 }
 function saveSelectedYear(year) {
-    let training = settings.training = settings.training || {};
+    let training = rccConfig.training;
     if (training.year != year) {
         training.year = year;
-        SettingsController.write(settings);
+        rccConfig.write();
     }
 }

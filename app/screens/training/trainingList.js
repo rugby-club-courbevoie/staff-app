@@ -1,3 +1,4 @@
+"use strict";
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableWithoutFeedback, TouchableNativeFeedback, TouchableOpacity, FlatList, Platform } from 'react-native';
 import { Icon, Avatar, colors, normalize } from 'react-native-elements';
@@ -97,7 +98,7 @@ export default class TrainingList extends Component {
     render() {
         return <FlatList
             data={this.props.players}
-            keyExtractor={(player, index) => index} //item.playerLicense
+            keyExtractor={(player, index) => index} 
             renderItem={this.renderItem} />;
     }
 }
