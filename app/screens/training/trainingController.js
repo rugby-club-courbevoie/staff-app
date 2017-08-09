@@ -1,89 +1,48 @@
 import * as SettingsController from '../common/settingsController';
 import * as Request from '../common/request';
-import { defined_players } from '../../resource/data/players';
-
-const defined_categories = [
-    {
-        name: "Cat 2000",
-        year1: "2000",
-        year2: "2001"
-    },
-    {
-        name: "Cat 2010",
-        year1: "2010",
-        year2: "2011",
-        year3: "2012"
-    }
-];
 
 export let settings;
-const mode_debug = false;
 
 export function fetchCategories(end) {
     SettingsController.read((curSettings) => {
         settings = curSettings;
-        if (mode_debug) {
-            setTimeout(() => end(defined_categories), 1000);
-        }
-        else {
-            Request.get('/categories',end);
-        }
+        Request.get('/categories', end);
     });
 }
 
 export function fetchPlayers(params, end) {
-    if (mode_debug) {
-        setTimeout(() => end(defined_players), 1000);
-        return;
-    }
-    let today = new Date();
-    let todayParam = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-    let url = '/participants?event=training'
-        + '&date=' + todayParam
+    let url = '/presences?event=training'
+        + '&date=' + new Date().toISOString().substring(0, 10)
         + '&category=' + params.category
         + '&coachLicense=' + params.coachLicense;
-    Request.get(url,end);
+    Request.get(url, end);
 }
 
 let postTimeOut;
+
 export function postSelection(players, end) {
     clearTimeout(postTimeOut);
-    let presents = [];
+    let delta = [];
     for (let player of players) {
-        if (player.present) {
-            presents.push(player);
-        }
-    }
-    if (mode_debug) {
-        setTimeout(() => end(defined_players), 1000);
-        return;
-    }
-
-    fetch(settings.server + './participants', {
-        timeout: 1000,
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(presents)
-    }).then((response) => {
-        end(true)
-    })
-        .catch((error) => {
-            end(null, error)
+        delta.push({
+            playerLicense: player.playerLicense,
+            date: player.date,
+            present: player.present,
+            presentStamp: player.presentStamp
         });
+    }
+    Request.put('/presences', delta, end);
 }
 export function filterByYear(year, players) {
     let filtered = [];
     saveSelectedYear(year);
     if (players) {
-        for (player of players) { 
+        for (player of players) {
             if (player.playerLicense && player.playerLicense.indexOf(year) == 0) {
                 filtered.push(player);
             }
         }
-    }    
+    }
     return filtered;
 }
 

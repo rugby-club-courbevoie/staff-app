@@ -18,37 +18,42 @@ export default class TrainingDetail extends Component {
     }
     //{this.renderPicture(picture, playerName, playerLicense)}
     render() {
+        return <ScrollView>
+             <List>
+                <ListItem
+                    title="Entraîneur"
+                    rightTitle={coachName || ""}
+                    hideChevron/>
+            </List>
+        </ScrollView>;
+    }
+    renderrr() {
         const { picture, playerName, present, playerLicense, coachName, excusedBy, excusedReason } = this.props.navigation.state.params;
         return <ScrollView>
             <List>
                 <ListItem
                     title="Présent"
-                    rightIcon={{ name: present ? "check-box" : "check-box-outline-blank" }}
-                />
+                    rightIcon={{ name: present ? "check-box" : "check-box-outline-blank" }}/>
                 <ListItem
                     title="Licence"
                     rightTitle={playerLicense || ""}
-                    hideChevron
-                />
+                    hideChevron/>
             </List>
             <List>
                 <ListItem
                     title="Entraîneur"
                     rightTitle={coachName || ""}
-                    hideChevron
-                />
+                    hideChevron/>
             </List>
             <List>
                 <ListItem
                     title="Excusé par"
                     rightTitle={excusedBy || ""}
-                    hideChevron
-                />
+                    hideChevron/>
                 <ListItem
                     title="Raison"
                     rightTitle={excusedReason || ""}
-                    hideChevron
-                />
+                    hideChevron/>
             </List>
         </ScrollView>;
     }

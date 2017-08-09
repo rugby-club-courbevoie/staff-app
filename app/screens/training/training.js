@@ -7,8 +7,10 @@ import NavHeader from '../common/navHeader';
 import * as css from '../../resource/styles';
 import TrainingList from './trainingList';
 import * as Controller from './trainingController';
-import Category from './category';
+import * as SettingsController from '../common/settingsController';
+import { Diagnose, LoadingMessage } from '../common/diagnose';
 
+import Category from './category';
 
 export default class Training extends Component {
     settings;
@@ -28,7 +30,7 @@ export default class Training extends Component {
             if (error) {
                 this.setState({
                     loadingMessage: null,
-                    error: error,
+                    error: error.message,
                 });
             }
             else {
@@ -37,13 +39,20 @@ export default class Training extends Component {
         });
     }
     onSubmit = () => {
-
+        Controller.postSelection(this.state.players, (success, error) => {
+            if (error) {
+                this.setState({
+                    error: error.message
+                });
+            }
+        });
     }
     onPlayerShowDetail = (player) => {
         this.props.navigation.navigate('TrainingDetail', { ...player });
     }
     onPlayerCheckPress = (player) => {
         player.present = !player.present;
+        player.presentStamp = new Date().toISOString();
         this.setState({
             players: this.state.players.slice()
         });
@@ -59,13 +68,13 @@ export default class Training extends Component {
         });
         Controller.fetchPlayers({
             category: seletectedCategory.name,
-            coachLicense: "2001091046249"
+            coachLicense: SettingsController.settings.coachLicense
         }, (players, error) => {
             let state = {
                 loadingMessage: null
             };
             if (error) {
-                state.error = error;
+                state.error = error.message;
             }
             else {
                 state.allPlayers = players;
@@ -89,9 +98,6 @@ export default class Training extends Component {
                 onCategoryChange={this.onCategoryChange}
                 onYearChange={this.onYearChange} />
         }
-        else {
-            return <View><Text>{this.state.error ? LocaleStrings.training_load_failed : this.state.loadingMessage}</Text></View>;
-        }
     }
     renderList() {
         if (this.state.categories) {
@@ -113,13 +119,21 @@ export default class Training extends Component {
             }
         }
     }
-    render() {
-        if (!this.state.error) {
-            return <View style={{ flex: 1 }}>
-                {this.renderCategory()}
-                {this.renderList()}
-            </View >;
+    renderMessage() {
+        if (this.state.error) {
+            return <Diagnose message={this.state.error} />;
         }
-        return <View><Text>{this.state.error ? LocaleStrings.training_load_failed : this.state.loadingMessage}</Text></View>;
+        else {
+            if (this.state.loadingMessage) {
+                return <LoadingMessage message={this.state.loadingMessage} />;
+            }
+        }
+    }
+    render() {
+        return <View style={{ flex: 1 }}>
+            {this.renderCategory()}
+            {this.renderList()}
+            {this.renderMessage()}
+        </View >;
     }
 }

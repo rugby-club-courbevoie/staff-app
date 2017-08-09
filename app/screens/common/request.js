@@ -23,7 +23,16 @@ export function post(url, data, end) {
     }
     send(url, props, end);
 }
-
+export function put(url, data, end) {
+    let props = {
+        method: 'PUT'
+    };
+    if (data) {
+        props.body = JSON.stringify(data);
+        console.log("PUT"  + props.body);
+    }
+    send(url, props, end);
+}
 
 function send(url, props, end) {
     if (!props) {

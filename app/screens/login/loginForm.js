@@ -5,13 +5,13 @@ import LocaleStrings from '../../resource/localeStrings';
 import * as SettingsController from '../common/settingsController';
 import { StyleSheet, Text, View } from 'react-native';
 import * as Request from '../common/request';
+import { LoadingMessage } from '../common/diagnose';
 
-
-const mode_debug = false;
+const mode_debug = true;
 
 const DEFAULT_SERVER = "http://54.213.132.224";
 const DEFAULT_EMAIL = mode_debug ? "daniel.coz@sage.com" : "";
-const DEFAULT_PASSWORD = mode_debug ? "RCC-92400-rocks!" : "";
+const DEFAULT_PASSWORD = mode_debug ? "RCC-92200" : "";
 const DEFAULT_COACH = mode_debug ? "2001091046249" : "";
 
 
@@ -100,7 +100,7 @@ export default class LoginForm extends Component {
                 });
             }
             else {
-                newsettings.coachLicense = result.coachLicense;
+                newsettings.coachLicense = result.license;
                 SettingsController.write(newsettings);
                 this.onAuthenticate();
             }
@@ -108,9 +108,7 @@ export default class LoginForm extends Component {
     }
     renderMessage() {
         if (this.state.authenticationRequested || !this.state.init) {
-            return <View style={styles.info}>
-                <Icon name='hourglass-full' color='#03a9f4' style={styles.infoIcon} /><Text style={styles.infoText}>{LocaleStrings.login_validation}</Text>
-            </View>;
+            return <LoadingMessage message={LocaleStrings.login_validation}/>;
         }
         else {
             return <FormValidationMessage>{this.state.error}</FormValidationMessage>;
