@@ -3,17 +3,17 @@ import React, { Component } from 'react';
 import { Button, FormLabel, FormInput, FormValidationMessage, Icon } from 'react-native-elements';
 import LocaleStrings from '../../resource/localeStrings';
 import { rccConfig } from '../common/config';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import * as Request from '../common/request';
 import { LoadingMessage } from '../common/diagnose';
 
 export default class LoginForm extends Component {
     constructor(props) {
         super(props);
-        this.state = this.buildState(false);
+        this.state = this.buildState(rccConfig.authenticated);
     }
     buildState(init) {
-        let state =  {
+        let state = {
             init: init,
             error: "",
             email: rccConfig.email,
@@ -68,6 +68,9 @@ export default class LoginForm extends Component {
         }
         event.preventDefault();
     }
+    onCancel() {
+        this.props.navigation.navigate('HomeRoute');
+    }
     onAuthenticate() {
         Request.setSettings(rccConfig);
         this.props.navigation.navigate('HomeRoute');
@@ -104,63 +107,78 @@ export default class LoginForm extends Component {
             return <FormValidationMessage>{this.state.error}</FormValidationMessage>;
         }
     }
+    renderButtons() {
+        let ok = <Button
+            raised
+            onPress={(e) => this.onSubmit(e)}
+            disabled={this.state.authenticationRequested}
+            buttonStyle={{ marginTop: 20 }}
+            backgroundColor="#03a9f4"
+            color="#FFF"
+            title={(rccConfig.authenticated ? LocaleStrings.login_ok : LocaleStrings.login_logon).toUpperCase()} />;
+        let cancel = rccConfig.authenticated && <Button
+            raised
+            onPress={(e) => this.onCancel(e)}
+            disabled={this.state.authenticationRequested}
+            buttonStyle={{ marginTop: 20, marginBottom: 20 }}
+            borderColor="#03a9f4"
+            backgroundColor="#FFF"
+            color="#03a9f4"
+            title={LocaleStrings.login_cancel.toUpperCase()} />;
+        return <View>{ok}{cancel}</View>;
+    }
     render() {
         if (this.state.init) {
             return <View style={styles.container}>
                 <View style={styles.title}>
                     <Text style={styles.titleText}>Rugby Club Courbevoie</Text>
                 </View>
-                <View style={styles.content}>
-                    <View style={styles.form}>
-                        <FormLabel>{LocaleStrings.login_server}</FormLabel>
-                        <FormInput
-                            disabled={this.state.authenticationRequested}
-                            autoCapitalize='none'
-                            autoCorrect={false}
-                            autoFocus={true}
-                            keyboardType='email-address'
-                            value={this.state.server}
-                            onChangeText={(text) => this.setState({ server: text })}
-                        />
-                        <FormLabel>{LocaleStrings.login_email}</FormLabel>
-                        <FormInput
-                            disabled={this.state.authenticationRequested}
-                            autoCapitalize='none'
-                            autoCorrect={false}
-                            autoFocus={true}
-                            keyboardType='email-address'
-                            value={this.state.email}
-                            onChangeText={(text) => this.setState({ email: text })}
-                        />
-                        <FormLabel>{LocaleStrings.login_password}</FormLabel>
-                        <FormInput
-                            disabled={this.state.authenticationRequested}
-                            autoCapitalize='none'
-                            autoCorrect={false}
-                            secureTextEntry={true}
-                            value={this.state.password}
-                            onChangeText={(text) => this.setState({ password: text })}
-                        />
-                        <FormLabel>{LocaleStrings.login_confirm_password}</FormLabel>
-                        <FormInput
-                            disabled={this.state.authenticationRequested}
-                            autoCapitalize='none'
-                            autoCorrect={false}
-                            secureTextEntry={true}
-                            value={this.state.confirmPassword}
-                            onChangeText={(text) => this.setState({ confirmPassword: text })}
-                        />
-                        {this.renderMessage()}
-                        <Button
-                            onPress={(e) => this.onSubmit(e)}
-                            disabled={this.state.authenticationRequested}
-                            raised
-                            buttonStyle={styles.button}
-                            textStyle={{ textAlign: 'center' }}
-                            title={LocaleStrings.login_ok}
-                        />
+                <ScrollView style={{ flex: 1 }}>
+                    <View style={styles.content}>
+                        <View>
+                            <FormLabel>{LocaleStrings.login_server}</FormLabel>
+                            <FormInput
+                                disabled={this.state.authenticationRequested}
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                                autoFocus={true}
+                                keyboardType='email-address'
+                                value={this.state.server}
+                                onChangeText={(text) => this.setState({ server: text })}
+                            />
+                            <FormLabel>{LocaleStrings.login_email}</FormLabel>
+                            <FormInput
+                                disabled={this.state.authenticationRequested}
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                                autoFocus={true}
+                                keyboardType='email-address'
+                                value={this.state.email}
+                                onChangeText={(text) => this.setState({ email: text })}
+                            />
+                            <FormLabel>{LocaleStrings.login_password}</FormLabel>
+                            <FormInput
+                                disabled={this.state.authenticationRequested}
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                                secureTextEntry={true}
+                                value={this.state.password}
+                                onChangeText={(text) => this.setState({ password: text })}
+                            />
+                            <FormLabel>{LocaleStrings.login_confirm_password}</FormLabel>
+                            <FormInput
+                                disabled={this.state.authenticationRequested}
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                                secureTextEntry={true}
+                                value={this.state.confirmPassword}
+                                onChangeText={(text) => this.setState({ confirmPassword: text })}
+                            />
+                        </View>
                     </View>
-                </View>
+                </ScrollView>
+                {this.renderMessage()}
+                {this.renderButtons()}
             </View>;
         }
         return this.renderMessage();
@@ -173,7 +191,6 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        alignItems: "center",
         justifyContent: "center"
     },
     form: {
@@ -202,9 +219,5 @@ const styles = StyleSheet.create({
         marginBottom: 1,
         color: '#03a9f4',
         fontSize: 12,
-    },
-    button: {
-        backgroundColor: '#03a9f4',
-        marginTop: 20
     }
 });

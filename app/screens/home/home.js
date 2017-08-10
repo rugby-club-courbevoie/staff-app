@@ -12,11 +12,6 @@ const screens = [
         icon: "school"
     },
     {
-        title: LocaleStrings.training_title + " old",
-        route: "TrainingOld",
-        icon: "school"
-    },
-    {
         title: LocaleStrings.playerSelect_title,
         route: "PlayerSelect",
         icon: "assignment-ind"

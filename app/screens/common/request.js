@@ -33,7 +33,6 @@ export function put(url, data, end) {
     };
     if (data) {
         props.body = JSON.stringify(data);
-        console.log("PUT" + props.body);
     }
     send(url, props, end);
 }

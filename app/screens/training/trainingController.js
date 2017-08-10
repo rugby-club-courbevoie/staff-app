@@ -13,8 +13,31 @@ export function fetchPlayers(category, end) {
         + '&date=' + new Date().toISOString().substring(0, 10)
         + '&category=' + category
         + '&coachLicense=' + rccConfig.coachLicense;
-    console.log()
     Request.get(url, end);
+}
+export function fetchPlayer(playerLicense, end) {
+    Request.get("/licenses/" + playerLicense, end);
+}
+
+export function clone(obj) {
+    if (!obj || typeof obj !== 'object') {
+        return obj;
+    }
+    if (Array.isArray(obj)) {
+        let newObj = [];
+        for (let record of obj) {
+            newObj.push(clone(record));
+        }
+        return newObj;
+    }
+
+    let newObj = {};
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            newObj[key] = clone(obj[key]);
+        }
+    }
+    return newObj;
 }
 
 export function postSelection(players, end) {
@@ -33,8 +56,7 @@ export function postSelection(players, end) {
     Request.put('/presences', delta, end);
 }
 export function filterByYear(year, players) {
-    let filtered = [];
-    saveSelectedYear(year);
+    let filtered = [];    
     if (players) {
         for (let player of players) {
             if (player.playerLicense && player.playerLicense.indexOf(year) == 0) {
@@ -78,7 +100,7 @@ export function saveSelectedCategory(category) {
     }
     return training.year;
 }
-function saveSelectedYear(year) {
+export function saveSelectedYear(year) {
     let training = rccConfig.training;
     if (training.year != year) {
         training.year = year;

@@ -20,6 +20,7 @@ export default class Training extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            dirty: false,
             loadingMessage: LocaleStrings.training_categories_load_in_progress
         };
     }
@@ -28,7 +29,9 @@ export default class Training extends Component {
             if (error) {
                 this.setState({
                     loadingMessage: null,
-                    error: error.message,
+                    diagnose: {
+                        message: error.message
+                    }
                 });
             }
             else {
@@ -36,23 +39,41 @@ export default class Training extends Component {
             }
         });
     }
+    onCancel = () => {
+        this.filterByYear({
+            dirty: false,
+            allPlayers: Controller.clone(this.state.restoreAllPlayers),
+            restoreAllPlayers: this.state.restoreAllPlayers,
+            selectedYear: this.state.selectedYear,
+        });
+    }
     onSubmit = () => {
         Controller.postSelection(this.state.players, (success, error) => {
             if (error) {
                 this.setState({
-                    error: error.message
+                    diagnose: {
+                        message: error.message
+                    }
+                });
+            }
+            else {
+                this.setState({
+                    restoreAllPlayers: Controller.clone(this.state.allPlayers),
+                    diagnose: null,
+                    dirty: false
                 });
             }
         });
     }
     onPlayerShowDetail = (player) => {
-        console.log("onPlayerShowDetail " + JSON.stringify(player));
         this.props.navigation.navigate('TrainingDetail', { ...player });
     }
     onPlayerCheckPress = (player) => {
         player.present = !player.present;
         player.presentStamp = new Date().toISOString();
         this.setState({
+            diagnose: null,
+            dirty: true,
             players: this.state.players.slice()
         });
     }
@@ -60,30 +81,53 @@ export default class Training extends Component {
         let selectedYear = Controller.saveSelectedCategory(seletectedCategory);
         this.setState({
             loadingMessage: LocaleStrings.training_load_in_progress,
+            diagnose: null,
             categories: categories || this.state.categories,
             seletectedCategory: seletectedCategory,
             selectedYear: selectedYear,
-            players: []
+            players: [],
+            allPlayers: [],
+            restoreAllPlayers: []
         });
         Controller.fetchPlayers(seletectedCategory.name, (players, error) => {
-            let state = {
-                loadingMessage: null
-            };
             if (error) {
-                state.error = error.message;
+                this.setState({
+                    loadingMessage: null,
+                    diagnose: {
+                        message: error.message
+                    }
+                });
             }
             else {
-                state.allPlayers = players;
-                state.players = Controller.filterByYear(this.state.selectedYear, players);
+                this.filterByYear({
+                    allPlayers: players,
+                    restoreAllPlayers: Controller.clone(players),
+                    selectedYear: this.state.selectedYear
+                })
             }
-            this.setState(state);
         });
     }
     onYearChange = (selectedYear) => {
-        this.setState({
+        this.filterByYear({
+            allPlayers: this.state.allPlayers,
+            restoreAllPlayers: this.state.restoreAllPlayers,
             selectedYear: selectedYear,
-            players: Controller.filterByYear(selectedYear, this.state.allPlayers)
         });
+    }
+    filterByYear(state, allPlayers) {
+        state.players = Controller.filterByYear(state.selectedYear, state.allPlayers);
+        state.restorePlayers = Controller.filterByYear(state.selectedYear, state.restoreAllPlayers);
+        Controller.saveSelectedYear(state.selectedYear);
+        state.diagnose = null;
+        state.loadingMessage = null;
+        if (!state.players || !state.players.length) {
+            let msg = LocaleStrings.training_no_players_for_cat.replace("{0}", this.state.seletectedCategory.name);
+            state.diagnose = {
+                severity: "info",
+                message: msg.replace("{1}", state.selectedYear)
+            };
+        }
+        this.setState(state);
     }
     renderCategory() {
         if (this.state.categories) {
@@ -95,29 +139,51 @@ export default class Training extends Component {
                 onYearChange={this.onYearChange} />
         }
     }
-    renderList() {
-        if (this.state.categories) {
-            if (this.state.players && this.state.players.length) {
-                return <View style={{ flex: 1 }}>
-                    <ScrollView style={{ flex: 1 }}>
-                        <TrainingList players={this.state.players}
-                            onPlayerShowDetail={this.onPlayerShowDetail}
-                            onPlayerCheckPress={this.onPlayerCheckPress} />
-                    </ScrollView>
-                    <View>
-                        <Button title="Submit" onPress={this.onSubmit} disabled={!(this.state.players && this.state.players.length > 0)} />
-                    </View>
-                </View>;
-            }
-            else {
-                let msg = LocaleStrings.training_no_players_for_cat.replace("{0}", this.state.seletectedCategory.name);
-                return <View><Text>{msg.replace("{1}", this.state.selectedYear)}</Text></View>;
+    countPresents(players) {
+        let presents = 0;
+        for (let player of players) {
+            if (player.present) {
+                presents++;
             }
         }
+        return presents;
+    }
+    renderList() {
+        if (this.state.categories && this.state.players && this.state.players.length) {
+            let saveTitle = "Sauver    ( " + this.countPresents(this.state.players) + " / " + this.state.players.length + " )";
+            let cancelTitle = "Annuler    ( " + this.countPresents(this.state.restorePlayers) + " / " + this.state.restorePlayers.length + " )";
+
+            return <View style={{ flex: 1 }}>
+                <ScrollView style={{ flex: 1 }}>
+                    <TrainingList players={this.state.players}
+                        onPlayerShowDetail={this.onPlayerShowDetail}
+                        onPlayerCheckPress={this.onPlayerCheckPress} />
+                </ScrollView>
+                {this.renderMessage()}
+                <View style={{ marginTop: 20, flexDirection: 'row' }}>
+                    <Button title={saveTitle}
+                        raised
+                        icon={{ name: "done", color: "#FFF" }}
+                        backgroundColor="#0D47A1"
+                        color="#FFF"
+                        onPress={this.onSubmit}
+                        disabled={!this.state.dirty} />
+                    <Button title={cancelTitle}
+                        raised
+                        icon={{ name: "undo", color: (this.state.dirty ? "#0D47A1" : "#FFF") }}
+                        boderColor="#0D47A1"
+                        backgroundColor="#FFF"
+                        color={this.state.dirty ? "#0D47A1" : "#FFF"}
+                        onPress={this.onCancel}
+                        disabled={!this.state.dirty} />
+                </View>
+            </View>;
+        }
+        return this.renderMessage();
     }
     renderMessage() {
-        if (this.state.error) {
-            return <Diagnose message={this.state.error} />;
+        if (this.state.diagnose) {
+            return <Diagnose message={this.state.diagnose.message} severity={this.state.diagnose.severity} />;
         }
         else {
             if (this.state.loadingMessage) {
@@ -129,7 +195,6 @@ export default class Training extends Component {
         return <View style={{ flex: 1 }}>
             {this.renderCategory()}
             {this.renderList()}
-            {this.renderMessage()}
         </View >;
     }
 }
