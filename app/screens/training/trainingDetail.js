@@ -22,7 +22,7 @@ export default class TrainingDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loadingMessage: LocaleStrings.training_categories_load_in_progress
+            loadingMessage: "Chargement en cours"
         };
     }
     componentDidMount() {
@@ -30,17 +30,40 @@ export default class TrainingDetail extends Component {
             if (error) {
                 this.setState({
                     loadingMessage: null,
-                    error: error.message,
+                    error: error.message
                 });
             }
             else {
                 this.setState({
+                    loadingMessage: null,
                     player: player
                 });
             }
         });
     }
     //{this.renderPicture(picture, playerName, playerLicense)}
+    renderParent(firstName, lastName, email, phone) {
+        if (firstName || lastName) {
+            return <List>
+                <ListItem
+                    title="Prénom"
+                    rightTitle={firstName || ""}
+                    hideChevron />
+                <ListItem
+                    title="Nom"
+                    rightTitle={lastName || ""}
+                    hideChevron />
+                <ListItem
+                    title="Email"
+                    rightTitle={email || ""}
+                    hideChevron />
+                <ListItem
+                    title="Téléphone"
+                    rightTitle={phone || ""}
+                    hideChevron />
+            </List>;
+        }
+    }
     renderDetail() {
         if (this.state) {
             let player = this.state.player;
@@ -48,19 +71,37 @@ export default class TrainingDetail extends Component {
                 return <ScrollView>
                     <List>
                         <ListItem
-                            title="Présent"
-                            rightIcon={{ name: player.present ? "check-box" : "check-box-outline-blank" }} />
-                        <ListItem
                             title="Licence"
-                            rightTitle={player.playerLicense || ""}
+                            rightTitle={player.license || ""}
                             hideChevron />
+                        <ListItem
+                            title="Active"
+                            rightIcon={{ name: player.active ? "check-box" : "check-box-outline-blank" }} />
                     </List>
                     <List>
                         <ListItem
-                            title="Entraîneur"
-                            rightTitle={player.coachName || ""}
+                            title="Prénom"
+                            rightTitle={player.firstName || ""}
+                            hideChevron />
+                        <ListItem
+                            title="Licence"
+                            rightTitle={player.lastName || ""}
+                            hideChevron />
+                        <ListItem
+                            title="Email"
+                            rightTitle={player.email || ""}
+                            hideChevron />
+                        <ListItem
+                            title="Rue"
+                            rightTitle={player.street || ""}
+                            hideChevron />
+                        <ListItem
+                            title="Ville"
+                            rightTitle={player.city || ""}
                             hideChevron />
                     </List>
+                    {this.renderParent(player.parent1FirstName, player.parent1LastName, player.parent1Email, player.parent1Phone)}
+                    {this.renderParent(player.parent2FirstName, player.parent2LastName, player.parent2Email, player.parent2Phone)}
                 </ScrollView>;
             }
         }
@@ -80,15 +121,5 @@ export default class TrainingDetail extends Component {
             {this.renderDetail()}
             {this.renderMessage()}
         </View >;
-    }
-    renderrr() {
-        const { picture, playerName, present, playerLicense, coachName, excusedBy, excusedReason } = this.props.navigation.state.params;
-        return <ScrollView>
-            <ListItem
-                title="Raison"
-                rightTitle={excusedReason || ""}
-                hideChevron />
-
-        </ScrollView>;
     }
 }

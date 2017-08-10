@@ -16,7 +16,7 @@ export function fetchPlayers(category, end) {
     Request.get(url, end);
 }
 export function fetchPlayer(playerLicense, end) {
-    Request.get("/licenses/" + playerLicense, end);
+    Request.get("/licensees/" + playerLicense, end);
 }
 
 export function clone(obj) {
