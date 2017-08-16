@@ -1,6 +1,6 @@
 "use strict";
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableWithoutFeedback, TouchableNativeFeedback, TouchableOpacity, FlatList, Platform } from 'react-native';
+import { StyleSheet, View, Text, TouchableHighlight, TouchableNativeFeedback, TouchableOpacity, FlatList, Platform } from 'react-native';
 import { Icon, Avatar, colors, normalize } from 'react-native-elements';
 import LocaleStrings from '../../resource/localeStrings';
 
@@ -45,11 +45,14 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         justifyContent: 'center',
         flex: 1,
+    },
+    detailCheck: {
+        marginRight:15
     }
 })
 let index = 1;
 class TrainingRow extends Component {
-    onRowPress = () => {
+    onShowDetail = () => {
         this.props.onShowDetail(this.props.player, this.props.index);
     }
     onCheckPress = (player) => {
@@ -57,33 +60,35 @@ class TrainingRow extends Component {
     }
     render() {
         const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
-        return <TouchableWithoutFeedback onPress={this.onRowPress}>
-            <View style={styles.row}>
-                <Touchable onPress={this.onCheckPress}>
-                    <View style={styles.avatarCheck}>
-                        <Icon size={24}
-                            color="#2196F3"
-                            name={this.props.player.present ? "check-box" : "check-box-outline-blank"} />
-                        {this.props.player.picture && <Avatar
-                            rounded={true}
-                            source={{ uri: this.props.player.picture.thumbnail }}
-                        />}
-                    </View>
-                </Touchable>
-                <View style={styles.titleSubtitleContainer}>
-                    <View>
-                        <Text style={styles.title}>{this.props.player.playerName.toUpperCase()}</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.subtitle}>{LocaleStrings.training_license.toUpperCase() + " " + this.props.player.playerLicense}</Text>
-                    </View>
+        return <View style={styles.row}>
+            <Touchable onPress={this.onCheckPress}>
+                <View style={styles.avatarCheck} width={34} height={34}>
+                    <Icon size={34}
+                        color="#2196F3"
+                        name={this.props.player.present ? "check-box" : "check-box-outline-blank"} />
+                    {this.props.player.picture && <Avatar
+                        rounded={true}
+                        source={{ uri: this.props.player.picture.thumbnail }}
+                    />}
                 </View>
-                <Icon
-                    size={28}
-                    name='chevron-right'
-                />
+            </Touchable>
+            <View style={styles.titleSubtitleContainer}>
+                <View>
+                    <Text style={styles.title}>{this.props.player.playerName.toUpperCase()}</Text>
+                </View>
+                <View>
+                    <Text style={styles.subtitle}>{LocaleStrings.training_license.toUpperCase() + " " + this.props.player.playerLicense}</Text>
+                </View>
             </View>
-        </TouchableWithoutFeedback>;
+            <Touchable onPress={this.onShowDetail}>
+                <View style={styles.detailCheck} width={44}>
+                    <Icon
+                        size={34}
+                        name='chevron-right'
+                    />
+                </View>
+            </Touchable>
+        </View>;
     }
 }
 
@@ -98,7 +103,7 @@ export default class TrainingList extends Component {
     render() {
         return <FlatList
             data={this.props.players}
-            keyExtractor={(player, index) => index} 
+            keyExtractor={(player, index) => index}
             renderItem={this.renderItem} />;
     }
 }
