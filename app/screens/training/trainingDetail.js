@@ -79,7 +79,6 @@ export default class TrainingDetail extends Component {
     }
     componentDidMount() {
         Controller.fetchPlayer(this.props.navigation.state.params.playerLicense, (player, error) => {
-            console.log("Palyer" + JSON.stringify(player));
             if (error) {
                 this.setState({
                     loadingMessage: null,

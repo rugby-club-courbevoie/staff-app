@@ -22,7 +22,6 @@ export default class LoginForm extends Component {
             server: rccConfig.server,
             coachLicense: rccConfig.coachLicense
         };
-        //console.warn(JSON.stringify(state));
         return state;
     }
     componentDidMount() {
