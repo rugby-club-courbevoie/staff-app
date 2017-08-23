@@ -4,7 +4,7 @@ import LocaleStrings from '../../resource/localeStrings';
 import { View, Text, ScrollView } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import NavHeader from '../common/navHeader';
-import { users } from '../../resource/data/users';
+//import { users } from '../../resource/data/users';
 import * as css from '../../resource/styles';
 
 export default class Contacts extends Component {
