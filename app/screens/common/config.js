@@ -10,7 +10,7 @@ class Config {
     }
     read(onRead) {
         AsyncStorage.getItem(SERVER_KEY, (error, value) => {
-            this.data = value && JSON.parse(value);            
+            this.data = value && JSON.parse(value);
             if (!this.data) {
                 if (this.modeDebug) {
                     this.data = {
@@ -29,8 +29,13 @@ class Config {
             onRead();
         });
     }
-    write(){
-        AsyncStorage.setItem(SERVER_KEY, JSON.stringify(this.data));
+    write() {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
+        this.timeout = setTimeout(() => {
+            AsyncStorage.setItem(SERVER_KEY, JSON.stringify(this.data));
+        }, 2000);
     }
     get email() {
         return this.data.email || "";

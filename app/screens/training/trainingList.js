@@ -1,27 +1,26 @@
 "use strict";
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableWithoutFeedback, TouchableNativeFeedback, TouchableOpacity, FlatList, Platform } from 'react-native';
+import { StyleSheet, View, Text, TouchableNativeFeedback, TouchableOpacity, FlatList, Platform } from 'react-native';
 import { Icon, Avatar, colors, normalize } from 'react-native-elements';
 import LocaleStrings from '../../resource/localeStrings';
+import {formatLicense} from './trainingDetail';
 
 const styles = StyleSheet.create({
     row: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 15,
         borderBottomWidth: 1,
         borderBottomColor: '#cccccc',
         backgroundColor: '#ffffff'
     },
+    leftSide:{
+        padding: 15,
+        flex: 1,
+        flexDirection: 'row'
+    },
     avatarCheck: {
         flexDirection: 'row',
-    },
-    checkbox: {
-        width: 24,
-        height: 24,
-        marginRight: 5,
-        color: '#2196F3'
     },
     title: {
         fontSize: normalize(14),
@@ -45,9 +44,14 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         justifyContent: 'center',
         flex: 1,
-    },
+    },    
     detailCheck: {
-        marginRight: 15
+        borderLeftColor  :'#cccccc',
+        borderLeftWidth  :1,
+        paddingLeft: 15,
+        paddingRight: 15,
+        marginLeft: 15,
+        marginRight: 15,
     }
 })
 
@@ -67,27 +71,29 @@ class TrainingRow extends Component {
     render() {
         const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
         return <View style={styles.row}>
-            <TouchableWithoutFeedback onPress={this.onCheckPress}>
-                <View style={styles.avatarCheck} width={34} height={34}>
-                    <Icon size={34}
-                        color="#2196F3"
-                        name={this.props.present ? "check-box" : "check-box-outline-blank"} />
-                    {this.props.picture && <Avatar
-                        rounded={true}
-                        source={{ uri: this.props.picture.thumbnail }}
-                    />}
+            <Touchable onPress={this.onCheckPress}>
+                <View style={styles.leftSide}>
+                    <View style={styles.avatarCheck} width={34} height={34}>
+                        <Icon size={34}
+                            color="#2196F3"
+                            name={this.props.present ? "check-box" : "check-box-outline-blank"} />
+                        {this.props.picture && <Avatar
+                            rounded={true}
+                            source={{ uri: this.props.picture.thumbnail }}
+                        />}
+                    </View>
+                    <View style={styles.titleSubtitleContainer}>
+                        <View>
+                            <Text style={styles.title}>{this.props.playerName.toUpperCase()}</Text>
+                        </View>
+                        <View>
+                            <Text style={styles.subtitle}>{LocaleStrings.training_license.toUpperCase() + " " + formatLicense(this.props.playerLicense)}</Text>
+                        </View>
+                    </View>
                 </View>
-            </TouchableWithoutFeedback>
-            <View style={styles.titleSubtitleContainer}>
-                <View>
-                    <Text style={styles.title}>{this.props.playerName.toUpperCase()}</Text>
-                </View>
-                <View>
-                    <Text style={styles.subtitle}>{LocaleStrings.training_license.toUpperCase() + " " + this.props.playerLicense}</Text>
-                </View>
-            </View>
+            </Touchable>            
             <Touchable onPress={this.onShowDetail}>
-                <View style={styles.detailCheck} width={44}>
+                <View style={styles.detailCheck} width={64}>
                     <Icon
                         size={34}
                         name='chevron-right'

@@ -1,66 +1,93 @@
 "use strict";
 import React, { Component } from 'react';
-import { ScrollView, View, Linking } from 'react-native';
-import { Tile, List, ListItem, Card } from 'react-native-elements';
-import { Icon } from 'react-native-elements';
-import * as css from '../../resource/styles';
+import { ScrollView, View, Linking, Text, TouchableNativeFeedback, TouchableOpacity, Platform } from 'react-native';
+import { Tile, Card, Icon } from 'react-native-elements';
 import * as Controller from './trainingController';
 import { Diagnose, LoadingMessage } from '../common/diagnose';
 import LocaleStrings from '../../resource/localeStrings';
 
-class Email extends Component {
+
+
+export function formatLicense(playerLicense) {
+    return formatText(playerLicense, 3, " ");
+}
+
+function formatText(value, limit, sepValue) {
+    let formatted = "", sep = 1;
+    value = value || "";
+    for (let ii = value.length - 1; ii >= 0; ii--) {
+        formatted = value[ii] + formatted;
+        if (sep == limit && ii != 0) {
+            sep = 1;
+            formatted = sepValue + formatted;
+        }
+        else {
+            sep++;
+        }
+    }
+    return formatted;
+}
+
+class CallButton extends Component {
     onCall = () => {
-        let url = "mailto:" + this.props.email;
-        Linking.canOpenURL(url).then((supported) => {
+        Linking.canOpenURL(this.props.url).then((supported) => {
             if (supported) {
-                Linking.openURL(url);
+                Linking.openURL(this.props.url);
             } else {
-                console.log('Don\'t know how to open URI: ' + url);
+                console.log('Don\'t know how to open URI: ' + this.props.url);
             }
         });
     }
     render() {
-        return <ListItem
-            onPress={this.onCall}
-            title="Email"
-            rightTitle={this.props.email || ""}
-            hideChevron
-            leftIcon={{ name: "mail" }} />
+        const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
+        return <Touchable onPress={this.onCall}>
+            <View style={{ flex: 1, flexDirection: "row", paddingTop: 10, paddingBottom: 10 }}>
+                <Icon name={this.props.icon} color="#0091ea" />
+                <Text style={{ color: "#0091ea", marginLeft: 15 }}>{this.props.title}</Text>
+            </View >
+        </Touchable>
+    }
+}
+
+class Email extends Component {
+    render() {
+        if (this.props.email) {
+            return <CallButton url={"mailto:" + this.props.email} icon="mail" title={this.props.email || ""} />;
+        }
+        return null;
     }
 }
 
 class Phone extends Component {
-    onCall = () => {
-        let url = "tel:" + this.props.phone;
-        Linking.canOpenURL(url).then((supported) => {
-            if (supported) {
-                Linking.openURL(url);
-            } else {
-                console.log('Don\'t know how to open URI: ' + url);
-            }
-        });
-    }
     render() {
-        let phone = this.props.phone || "";
-        let formatted = "", sep = 0;
-        for (let ii = phone.length - 1; ii >= 0; ii--) {
-            formatted = phone[ii] + formatted;
-            if (++sep == 2) {
-                sep = 0;
-                formatted = "." + formatted;
-            }
+        if (this.props.phone) {
+            return <CallButton url={"tel:" + this.props.phone} icon="phone" title={formatText(this.props.phone, 2, ".")} />;
         }
-        phone = formatted;
-        return <ListItem
-            onPress={this.onCall}
-            title="Téléphone"
-            rightTitle={phone}
-            hideChevron
-            leftIcon={{ name: "phone" }} />
+        return null;
+    }
+}
+
+class License extends Component {
+    render() {
+        let color, activeText;
+        if (this.props.active) {
+            color = "#4CAF50";
+            activeText = "Active";
+        }
+        else {
+            color = "#FF9800";
+            activeText = "Non active";
+        }
+        return <View style={{ flex: 1, flexDirection: "row", paddingTop: 10, paddingBottom: 10 }}>
+            <Icon name="assignment-ind" color={color} />
+            <Text style={{ marginLeft: 15, flex: 1 }}>{formatLicense(this.props.license)} </Text>
+            <Text style={{ marginLeft: 15, marginRight: 15, color: color }}>{activeText}</Text>
+        </View>;
     }
 }
 
 export default class TrainingDetail extends Component {
+    player;
     renderPicture(picture, playerName, playerLicense) {
         if (picture) {
             return <Tile
@@ -86,9 +113,9 @@ export default class TrainingDetail extends Component {
                 });
             }
             else {
+                this.player = player;
                 this.setState({
-                    loadingMessage: null,
-                    player: player
+                    loadingMessage: null
                 });
             }
         });
@@ -110,31 +137,18 @@ export default class TrainingDetail extends Component {
     }
     renderDetail() {
         if (this.state) {
-            let player = this.state.player;
-            if (player) {
+            if (this.player) {
                 return <ScrollView>
-                    <List>
-                        <ListItem
-                            title="Licence"
-                            rightTitle={player.license || ""}
-                            hideChevron />
-                        <ListItem
-                            title="Active"
-                            rightIcon={{ name: player.active ? "check-box" : "check-box-outline-blank" }} />
-                    </List>
-                    <List>
-                        <Email email={player.email} />
-                        <ListItem
-                            title="Rue"
-                            rightTitle={player.street || ""}
-                            hideChevron />
-                        <ListItem
-                            title="Ville"
-                            rightTitle={this.capitalize(player.city)}
-                            hideChevron />
-                    </List>
-                    {this.renderParent(player.parent1FirstName, player.parent1LastName, player.parent1Email, player.parent1Phone)}
-                    {this.renderParent(player.parent2FirstName, player.parent2LastName, player.parent2Email, player.parent2Phone)}
+                    <Card>
+                        <License license={this.player.license} active={this.player.active} />
+                        <Email email={this.player.email} />
+                        <View style={{ flex: 1, flexDirection: "row", paddingTop: 10, paddingBottom: 10 }}>
+                            <Icon name="home" />
+                            <Text style={{ marginLeft: 15 }}>{(this.player.street || "") + " , " + this.capitalize(this.player.city)} </Text>
+                        </View>
+                    </Card>
+                    {this.renderParent(this.player.parent1FirstName, this.player.parent1LastName, this.player.parent1Email, this.player.parent1Phone)}
+                    {this.renderParent(this.player.parent2FirstName, this.player.parent2LastName, this.player.parent2Email, this.player.parent2Phone)}
                 </ScrollView>;
             }
         }
