@@ -5,8 +5,8 @@ import { Tile, Card, Icon } from 'react-native-elements';
 import * as Controller from './trainingController';
 import { Diagnose, LoadingMessage } from '../common/diagnose';
 import LocaleStrings from '../../resource/localeStrings';
-
-
+import * as css from '../../resource/styles';
+import NavHeader from '../common/navHeader';
 
 export function formatLicense(playerLicense) {
     return formatText(playerLicense, 3, " ");
@@ -87,6 +87,10 @@ class License extends Component {
 }
 
 export default class TrainingDetail extends Component {
+    static navigationOptions = ({ navigation, screenProps }) => ({
+        headerTitle: (<NavHeader icon="person" title={navigation.state.params.playerName.toUpperCase()} />),
+        ...css.header
+    });
     player;
     renderPicture(picture, playerName, playerLicense) {
         if (picture) {

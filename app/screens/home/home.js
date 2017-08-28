@@ -4,6 +4,8 @@ import { List, ListItem } from 'react-native-elements'
 import LocaleStrings from '../../resource/localeStrings';
 import { rccConfig } from '../common/config';
 import { View } from 'react-native';
+import * as css from '../../resource/styles';
+import NavHeader from '../common/navHeader';
 
 const screens = [
     {
@@ -27,7 +29,8 @@ const screens = [
 
 export default class Home extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: LocaleStrings.home_title,
+        headerTitle: (<NavHeader icon="home" title={LocaleStrings.home_title} />),
+        ...css.header
     });
     componentDidMount() {
         if (!rccConfig.authenticated) {

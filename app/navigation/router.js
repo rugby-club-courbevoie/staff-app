@@ -1,4 +1,5 @@
 import React from 'react';
+import { Image, View } from 'react-native';
 import * as css from '../resource/styles';
 import { StackNavigator, DrawerNavigator, DrawerItems } from 'react-navigation';
 import Home from '../screens/home/home';
@@ -30,10 +31,7 @@ export const TrainingStack = StackNavigator({
     screen: Training
   },
   TrainingDetail: {
-    screen: TrainingDetail,
-    navigationOptions: ({ navigation }) => ({
-      title: navigation.state.params.playerName.toUpperCase()
-    }),
+    screen: TrainingDetail
   },
 }, { headerMode: 'none' });
 
@@ -56,13 +54,32 @@ export const RootStack = StackNavigator({
 });
 
 const customDrawerComponent = (props) =>
-  <ScrollView
-    style={{
-      flex: 1,
-      backgroundColor: css.drawer.style.backgroundColor,
+  <View style={{
+    flex: 1,
+    backgroundColor: css.drawer.style.backgroundColor,
+  }}>
+    <ScrollView
+      style={{
+        flex: 1
+      }}>
+      <DrawerItems {...props} />
+    </ScrollView>
+    <View style={{
+      flex: 3,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
     }}>
-    <DrawerItems {...props} />
-  </ScrollView>;
+      <Image style={{
+        resizeMode: "contain",
+        alignSelf: "center",
+        width: 216,
+        height: 216,
+        borderRadius:108,
+        borderWidth:1
+      }} source={require('../resource/xxl_logo.png')} />
+    </View>
+  </View>
 
 export const RootDrawer = DrawerNavigator({
   Login: {

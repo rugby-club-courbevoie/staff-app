@@ -1,5 +1,6 @@
 "use strict";
 import React, { Component } from 'react';
+import { Image } from 'react-native';
 import { Button, FormLabel, FormInput, FormValidationMessage, Icon } from 'react-native-elements';
 import LocaleStrings from '../../resource/localeStrings';
 import { rccConfig } from '../common/config';
@@ -130,6 +131,7 @@ export default class LoginForm extends Component {
         if (this.state.init) {
             return <View style={styles.container}>
                 <View style={styles.title}>
+                    <Image style={styles.titleLogo} source={require('../../resource/logo.png')} />
                     <Text style={styles.titleText}>Rugby Club Courbevoie</Text>
                 </View>
                 <ScrollView style={{ flex: 1 }}>
@@ -196,6 +198,15 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start"
     },
     title: {
+        flexDirection: "row",
+    },
+    titleLogo: {
+        margin: 8,
+        width: 48,
+        height: 48,
+        resizeMode: "contain",
+        borderRadius:24,
+        borderWidth:1
     },
     titleText: {
         margin: 20,

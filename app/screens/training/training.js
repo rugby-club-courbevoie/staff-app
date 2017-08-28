@@ -60,7 +60,6 @@ class YearFilter {
 
 export default class Training extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: LocaleStrings.training_title,
         headerTitle: (<NavHeader icon="school" title={LocaleStrings.training_title} />),
         ...css.header
     });
