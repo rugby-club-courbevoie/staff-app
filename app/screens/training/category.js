@@ -62,9 +62,9 @@ export default class Category extends Component {
 
     renderIos() {
         const initIndex = this.props.categories.indexOf(this.props.seletectedCategory);
-        return <View style={{padding:15}}>
-            <View >
-                <ModalPicker selectStyle={{paddingBottom:25}}
+        return <View style={{paddingVertical: 10}}>
+            <View style={{paddingHorizontal: 10 }}>
+                <ModalPicker selectStyle={{paddingBottom:28, alignItems: 'center'}}
                     data={this.props.categories.map((cat, i) => ({ key: i, label: cat.name }))}
                     initValue={initIndex >= 0 ? this.props.categories[initIndex].name : 'Selectionner ...'}
                     onChange={item => this.onCategoryChange(item.key)}>
