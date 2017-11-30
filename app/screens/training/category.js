@@ -1,7 +1,8 @@
 "use strict";
 import React, { Component } from 'react';
-import { StyleSheet, View, Picker } from 'react-native';
+import { StyleSheet, View, Picker, Platform } from 'react-native';
 import {  ButtonGroup } from 'react-native-elements';
+import ModalPicker from 'react-native-modal-picker'
 import * as css from '../../resource/styles';
 
 const styles = StyleSheet.create({
@@ -46,7 +47,7 @@ export default class Category extends Component {
                 buttons={years} />
         }
     }
-    render() {
+    renderDefault() {
         return <View style={styles.root}>
             <Picker
                 selectedValue={this.props.categories.indexOf(this.props.seletectedCategory)}
@@ -56,6 +57,23 @@ export default class Category extends Component {
                 }
             </Picker>
             {this.renderYears()}
-        </View >;
+        </View>
+    }
+
+    renderIos() {
+        const initIndex = this.props.categories.indexOf(this.props.seletectedCategory);
+        return <View style={{padding:15}}>
+            <View >
+                <ModalPicker selectStyle={{paddingBottom:25}}
+                    data={this.props.categories.map((cat, i) => ({ key: i, label: cat.name }))}
+                    initValue={initIndex >= 0 ? this.props.categories[initIndex].name : 'Selectionner ...'}
+                    onChange={item => this.onCategoryChange(item.key)}>
+                </ModalPicker>
+            </View>
+            {this.renderYears()}
+        </View>
+    }
+    render() {
+            return Platform.OS === 'ios' ? this.renderIos() : this.renderDefault();
     }
 }
