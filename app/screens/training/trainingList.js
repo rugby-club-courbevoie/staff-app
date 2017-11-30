@@ -5,10 +5,14 @@ import { Icon, Avatar, colors, normalize } from 'react-native-elements';
 import LocaleStrings from '../../resource/localeStrings';
 import {formatLicense} from './trainingDetail';
 
+function flexFilter(val) {
+    return Platform.OS !== 'ios' ? val : undefined;
+}
+
 const styles = StyleSheet.create({
     row: {
-        flex: 1,
-        flexDirection: 'row',
+        flex: flexFilter(1),
+        flexDirection: flexFilter('row'),
         alignItems: 'center',
         borderBottomWidth: 1,
         borderBottomColor: '#cccccc',
@@ -16,11 +20,11 @@ const styles = StyleSheet.create({
     },
     leftSide:{
         padding: 15,
-        flex: 1,
-        flexDirection: 'row'
+        flex: flexFilter(1),
+        flexDirection: flexFilter('row')
     },
     avatarCheck: {
-        flexDirection: 'row',
+        flexDirection: flexFilter('row'),
     },
     title: {
         fontSize: normalize(14),
@@ -43,7 +47,7 @@ const styles = StyleSheet.create({
     titleSubtitleContainer: {
         marginLeft: 10,
         justifyContent: 'center',
-        flex: 1,
+        flex: flexFilter(1),
     },    
     detailCheck: {
         borderLeftColor  :'#cccccc',
