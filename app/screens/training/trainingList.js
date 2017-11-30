@@ -23,7 +23,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff'
     },
     leftSide:{
-        padding: 15,
+        paddingHorizontal: 15,
+        paddingVertical: 8,
         flex: only('android', 1),
         flexDirection: 'row'
     },
