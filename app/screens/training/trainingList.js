@@ -5,14 +5,18 @@ import { Icon, Avatar, colors, normalize } from 'react-native-elements';
 import LocaleStrings from '../../resource/localeStrings';
 import {formatLicense} from './trainingDetail';
 
-function flexFilter(val) {
-    return Platform.OS !== 'ios' ? val : undefined;
+// I had to fix the flex directives on iOS
+// I'm keeping the old android code as is with xxxOnly guards
+// but maybe they can be removed after testing the iOS settings on android.
+function only(platform, val) {
+    return Platform.OS === platform ? val : undefined;
 }
 
 const styles = StyleSheet.create({
     row: {
-        flex: flexFilter(1),
-        flexDirection: flexFilter('row'),
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: only('ios', 'space-between'),
         alignItems: 'center',
         borderBottomWidth: 1,
         borderBottomColor: '#cccccc',
@@ -20,11 +24,11 @@ const styles = StyleSheet.create({
     },
     leftSide:{
         padding: 15,
-        flex: flexFilter(1),
-        flexDirection: flexFilter('row')
+        flex: only('android', 1),
+        flexDirection: 'row'
     },
     avatarCheck: {
-        flexDirection: flexFilter('row'),
+        flexDirection: only('android', 'row'),
     },
     title: {
         fontSize: normalize(14),
@@ -47,7 +51,7 @@ const styles = StyleSheet.create({
     titleSubtitleContainer: {
         marginLeft: 10,
         justifyContent: 'center',
-        flex: flexFilter(1),
+        flex: only('android', 1),
     },    
     detailCheck: {
         borderLeftColor  :'#cccccc',
