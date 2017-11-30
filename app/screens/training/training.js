@@ -1,7 +1,7 @@
 "use strict";
 import React, { Component } from 'react';
 import LocaleStrings from '../../resource/localeStrings';
-import { StyleSheet, View, Text, ScrollView, Picker, FormInput } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Picker, FormInput, Platform } from 'react-native';
 import { List, ListItem, Icon, Button } from 'react-native-elements';
 import NavHeader from '../common/navHeader';
 import * as css from '../../resource/styles';
@@ -10,6 +10,8 @@ import * as Controller from './trainingController';
 import { Diagnose, LoadingMessage } from '../common/diagnose';
 
 import Category from './category';
+
+function only(platform, val) { return Platform.OS === platform ? val : undefined; }
 
 class YearFilter {
     constructor(year, allPlayers) {
@@ -201,13 +203,18 @@ export default class Training extends Component {
                             onPlayerCheckPress={this.onPlayerCheckPress} />
                     </ScrollView>
                     {this.renderMessage()}
-                    <View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <View style={{
+                        marginTop: only('android', 15),
+                        marginVertical: only('ios', 15), 
+                        flexDirection: 'row', 
+                        justifyContent: 'space-between' 
+                        }}>
                         <Button title={saveTitle}
                             raised
                             icon={{ name: "done", color: "#FFF" }}
                             backgroundColor="#0D47A1"
                             color="#FFF"
-                            style={{ flex: 1 }}
+                            style={{ flex: only('android', 1) }}
                             onPress={this.onSubmit}
                             disabled={!this.activeFilter.dirty} />
                         <Button title={cancelTitle}

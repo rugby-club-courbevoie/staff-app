@@ -8,9 +8,7 @@ import {formatLicense} from './trainingDetail';
 // I had to fix the flex directives on iOS
 // I'm keeping the old android code as is with xxxOnly guards
 // but maybe they can be removed after testing the iOS settings on android.
-function only(platform, val) {
-    return Platform.OS === platform ? val : undefined;
-}
+function only(platform, val) { return Platform.OS === platform ? val : undefined; }
 
 const styles = StyleSheet.create({
     row: {
