@@ -9,7 +9,8 @@ import * as css from '../../resource/styles';
 import NavHeader from '../common/navHeader';
 
 export function formatLicense(playerLicense) {
-    return formatText(playerLicense, 3, " ");
+    const s = '' + playerLicense;
+    return s.substring(0, 4) + ' ' + s.substring(4, 6) + ' ' + s.substring(6);
 }
 
 function formatText(value, limit, sepValue) {
