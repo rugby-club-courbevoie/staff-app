@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 export const colors = {
   "secondary": '#0686E4',
@@ -18,7 +18,7 @@ export const colors = {
 // workaround since on iOS NotoSans works, but not NotoSans-Regular
 // on Android it works as expected (ie NotoSans-Regular)
 export const getFont = () => {
-  if (require('react-native').Platform.OS === 'ios') {
+  if (Platform.OS === 'ios') {
     return 'FontAwesome';
   }
   else {
@@ -38,6 +38,8 @@ export const values = {
   "small_icon_size": 40,
   "large_icon_size": 110,
 };
+
+function only(platform, val) { return Platform.OS === platform ? val : undefined; }
 
 // more info https://goo.gl/dqw4jF
 export const header = {
@@ -61,11 +63,12 @@ export const header = {
     color: colors.text_light,
     fontFamily: values.font_body,
     fontSize: values.font_title_size,
-    flex: 1
+    flex: only('android', 1),
   },
   logo: {
     marginLeft: 12,
     marginRight: 12,
+    marginBottom: only('ios', 10),
     width: 48,
     height: 48,
     resizeMode: "contain",
