@@ -13,7 +13,7 @@ const screens = [
         route: "Training",
         icon: "school"
     },
-    {
+    /*{
         title: LocaleStrings.playerSelect_title,
         route: "PlayerSelect",
         icon: "assignment-ind"
@@ -21,7 +21,7 @@ const screens = [
         title: LocaleStrings.matchCheck_title,
         route: "MatchCheck",
         icon: "assignment-turned-in"
-    },/* {
+    }, {
         title: LocaleStrings.contacts_title,
         route: "ContactsRoute",
         icon: "group"
@@ -42,7 +42,8 @@ export default class Home extends Component {
     }
     render() {
         if (rccConfig.authenticated) {
-            return <List containerStyle={{ marginBottom: 20 }}>
+            // borderTopWidth: see https://github.com/react-native-training/react-native-elements/issues/443
+            return <List containerStyle={{ marginBottom: 20, borderTopWidth: 0 }}>
                 {screens.map((item) =>
                     <ListItem
                         key={item.route}
