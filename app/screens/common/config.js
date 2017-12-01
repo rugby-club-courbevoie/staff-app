@@ -1,7 +1,7 @@
 import { AsyncStorage } from 'react-native';
 
 const SERVER_KEY = "RCC_APP_SETTINGS";
-const DEFAULT_SERVER = "http://54.213.132.224";
+const DEFAULT_SERVER = "http://vps443543.ovh.net:8124";
 
 class Config {
     data = {};
@@ -12,6 +12,7 @@ class Config {
         AsyncStorage.getItem(SERVER_KEY, (error, value) => {
             this.data = value && JSON.parse(value);
             if (!this.data) {
+                /*
                 if (this.modeDebug) {
                     this.data = {
                         server: DEFAULT_SERVER,
@@ -20,11 +21,10 @@ class Config {
                         coachLicense: "2001091046249"
                     };
                 }
-                else {
+                else */
                     this.data = {
                         server: DEFAULT_SERVER
                     };
-                }
             }
             onRead();
         });

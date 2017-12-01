@@ -137,6 +137,7 @@ export default class LoginForm extends Component {
                 <ScrollView style={{ flex: 1 }}>
                     <View style={styles.content}>
                         <View>
+                            {/*
                             <FormLabel>{LocaleStrings.login_server}</FormLabel>
                             <FormInput
                                 disabled={this.state.authenticationRequested}
@@ -147,6 +148,7 @@ export default class LoginForm extends Component {
                                 value={this.state.server}
                                 onChangeText={(text) => this.setState({ server: text })}
                             />
+                            */}
                             <FormLabel>{LocaleStrings.login_email}</FormLabel>
                             <FormInput
                                 disabled={this.state.authenticationRequested}
