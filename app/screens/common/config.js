@@ -1,7 +1,7 @@
 import { AsyncStorage } from 'react-native';
 
 const SERVER_KEY = "RCC_APP_SETTINGS";
-const DEFAULT_SERVER = "http://vps443543.ovh.net:8124";
+const DEFAULT_SERVER = "http://vps592276.ovh.net:8124";
 
 class Config {
     data = {};
