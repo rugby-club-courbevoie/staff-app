@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, View } from 'react-native';
 import * as css from '../resource/styles';
-import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
+import { createDrawerNavigator, DrawerNavigatorItems } from 'react-navigation-drawer';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Home from '../screens/home/home';
 import LoginForm from '../screens/login/loginForm';
@@ -66,7 +66,7 @@ const customDrawerComponent = props => (
                 flex: 1,
             }}
         >
-            <DrawerItems {...props} />
+            <DrawerNavigatorItems {...props} />
         </ScrollView>
         <View
             style={{
@@ -102,16 +102,16 @@ export const RootDrawer = createDrawerNavigator(
         },
         HomeRoute: {
             screen: RootStack,
-            /*navigationOptions: {
-      drawerLabel: LocaleStrings.route_home,
-      drawerIcon: ({ tintColor }) => <Icon name="home" color={tintColor} />,
-    },*/
+            navigationOptions: {
+                drawerLabel: LocaleStrings.route_home,
+                drawerIcon: ({ tintColor }) => <Icon name="home" color={tintColor} />,
+            },
         },
     },
-    /*{
+    {
         contentComponent: customDrawerComponent,
         drawerPosition: 'left',
         // styling for for DrawerView.Items in contentOptions
         contentOptions: css.drawer,
-    },*/
+    },
 );

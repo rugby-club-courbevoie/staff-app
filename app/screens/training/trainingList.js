@@ -95,7 +95,7 @@ class TrainingRow extends Component {
                         </View>
                         <View style={styles.titleSubtitleContainer}>
                             <View>
-                                <Text style={styles.title}>{this.props.playerName.toUpperCase()}</Text>
+                                <Text style={styles.title}>{(this.props.playerName || '').toUpperCase()}</Text>
                             </View>
                             <View>
                                 <Text style={styles.subtitle}>
