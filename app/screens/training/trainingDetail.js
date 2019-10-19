@@ -1,6 +1,7 @@
 'use strict';
 import React, { Component } from 'react';
 import { ScrollView, View, Linking, Text, TouchableNativeFeedback, TouchableOpacity, Platform } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { Tile, Card, Icon } from 'react-native-elements';
 import * as Controller from './trainingController';
 import { Diagnose, LoadingMessage } from '../common/diagnose';
@@ -185,10 +186,10 @@ export default class TrainingDetail extends Component {
     }
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1 }}>
                 {this.renderDetail()}
                 {this.renderMessage()}
-            </View>
+            </SafeAreaView>
         );
     }
 }

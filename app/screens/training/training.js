@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import LocaleStrings from '../../resource/localeStrings';
 import { View, ScrollView, Platform } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { Button } from 'react-native-elements';
 import NavHeader from '../common/navHeader';
 import * as css from '../../resource/styles';
@@ -254,10 +255,10 @@ export default class Training extends Component {
     }
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1 }}>
                 {this.renderCategory()}
                 {this.renderList()}
-            </View>
+            </SafeAreaView>
         );
     }
 }
