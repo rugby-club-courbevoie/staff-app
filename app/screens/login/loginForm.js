@@ -1,10 +1,10 @@
 'use strict';
 import React, { Component } from 'react';
-import { Image } from 'react-native';
+import { Image, StyleSheet, Text, View, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { Button, Input, Icon } from 'react-native-elements';
 import LocaleStrings from '../../resource/localeStrings';
 import { rccConfig } from '../common/config';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import * as Request from '../common/request';
 import { LoadingMessage } from '../common/diagnose';
 
@@ -136,7 +136,7 @@ export default class LoginForm extends Component {
     render() {
         if (this.state.init) {
             return (
-                <View style={styles.container}>
+                <SafeAreaView style={styles.container}>
                     <View style={styles.title}>
                         <Image style={styles.titleLogo} source={require('../../resource/logo.png')} />
                         <Text style={styles.titleText}>Rugby Club Courbevoie</Text>
@@ -178,7 +178,7 @@ export default class LoginForm extends Component {
                     </ScrollView>
                     {this.renderMessage()}
                     {this.renderButtons()}
-                </View>
+                </SafeAreaView>
             );
         }
         return this.renderMessage();

@@ -1,6 +1,7 @@
 'use strict';
 import React, { Component } from 'react';
 import { View } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { ListItem } from 'react-native-elements';
 import LocaleStrings from '../../resource/localeStrings';
 import { rccConfig } from '../common/config';
@@ -45,7 +46,7 @@ export default class Home extends Component {
         if (rccConfig.authenticated) {
             // borderTopWidth: see https://github.com/react-native-training/react-native-elements/issues/443
             return (
-                <View>
+                <SafeAreaView>
                     <View containerStyle={{ marginBottom: 20, borderTopWidth: 0 }}>
                         {screens.map(item => (
                             <ListItem
@@ -56,9 +57,10 @@ export default class Home extends Component {
                             />
                         ))}
                     </View>
-                </View>
+                </SafeAreaView>
             );
+        } else {
+            return <SafeAreaView />;
         }
-        return <View />;
     }
 }
