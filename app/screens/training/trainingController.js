@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 import { rccConfig } from '../common/config';
 import * as Request from '../common/request';
 
@@ -9,14 +9,18 @@ export function fetchCategories(end) {
 }
 
 export function fetchPlayers(category, end) {
-    let url = '/presences?event=training'
-        + '&date=' + new Date().toISOString().substring(0, 10)
-        + '&category=' + category
-        + '&coachLicense=' + rccConfig.coachLicense;
+    let url =
+        '/presences?event=training' +
+        '&date=' +
+        new Date().toISOString().substring(0, 10) +
+        '&category=' +
+        category +
+        '&coachLicense=' +
+        rccConfig.coachLicense;
     Request.get(url, end);
 }
 export function fetchPlayer(playerLicense, end) {
-    Request.get("/licensees/" + playerLicense, end);
+    Request.get('/licensees/' + playerLicense, end);
 }
 
 export function clone(obj) {
@@ -50,13 +54,13 @@ export function postSelection(players, end) {
             playerLicense: player.playerLicense,
             date: player.date,
             present: player.present,
-            presentStamp: player.presentStamp
+            presentStamp: player.presentStamp,
         });
     }
     Request.put('/presences', delta, end);
 }
 export function filterByYear(year, players) {
-    let filtered = [];    
+    let filtered = [];
     if (players) {
         for (let player of players) {
             if (player.playerLicense && player.playerLicense.indexOf(year) == 0) {
@@ -82,10 +86,7 @@ export function getDefaultYear(category) {
     let training = rccConfig.training;
     if (training.category) {
         let defYear = training.year;
-        if (defYear
-            && ((defYear == category.year1)
-                || (defYear == category.year2)
-                || (defYear == category.year3))) {
+        if (defYear && (defYear == category.year1 || defYear == category.year2 || defYear == category.year3)) {
             return defYear;
         }
     }

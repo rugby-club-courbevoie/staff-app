@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 import React, { Component } from 'react';
 import LocaleStrings from '../../resource/localeStrings';
-import { StyleSheet, View, Text, ScrollView, Picker, FormInput } from 'react-native';
-import { List, ListItem, Icon, Button } from 'react-native-elements';
+import { View, ScrollView, Platform } from 'react-native';
+import { Button } from 'react-native-elements';
 import NavHeader from '../common/navHeader';
 import * as css from '../../resource/styles';
 import TrainingList from './trainingList';
@@ -10,6 +10,10 @@ import * as Controller from './trainingController';
 import { Diagnose, LoadingMessage } from '../common/diagnose';
 
 import Category from './category';
+
+function only(platform, val) {
+    return Platform.OS === platform ? val : undefined;
+}
 
 class YearFilter {
     constructor(year, allPlayers) {
@@ -26,7 +30,7 @@ class YearFilter {
         player.presentStamp = new Date().toISOString();
         this.dirty = true;
         end({
-            diagnose: null
+            diagnose: null,
         });
     }
     cancel() {
@@ -40,15 +44,14 @@ class YearFilter {
             if (error) {
                 end({
                     diagnose: {
-                        message: error.message
-                    }
+                        message: error.message,
+                    },
                 });
-            }
-            else {
+            } else {
                 this.originalStatus = {};
                 this.dirty = false;
                 end({
-                    diagnose: null
+                    diagnose: null,
                 });
             }
         });
@@ -60,8 +63,8 @@ class YearFilter {
 
 export default class Training extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        headerTitle: (<NavHeader icon="school" title={LocaleStrings.training_title} />),
-        ...css.header
+        headerTitle: <NavHeader icon="school" title={LocaleStrings.training_title} />,
+        ...css.header,
     });
     allPlayers;
     originalStatus;
@@ -73,7 +76,7 @@ export default class Training extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loadingMessage: LocaleStrings.training_categories_load_in_progress
+            loadingMessage: LocaleStrings.training_categories_load_in_progress,
         };
     }
     componentDidMount() {
@@ -82,11 +85,10 @@ export default class Training extends Component {
                 this.setState({
                     loadingMessage: null,
                     diagnose: {
-                        message: error.message
-                    }
+                        message: error.message,
+                    },
                 });
-            }
-            else {
+            } else {
                 this.onCategoryChange(Controller.getDefaultCategory(categories), categories);
             }
         });
@@ -94,20 +96,20 @@ export default class Training extends Component {
     onCancel = () => {
         this.activeFilter.cancel();
         this.filterByYear(this.state.selectedYear);
-    }
+    };
     onSubmit = () => {
-        this.activeFilter.submit((state) => this.setState(state));
-    }
-    onPlayerShowDetail = (index) => {
+        this.activeFilter.submit(state => this.setState(state));
+    };
+    onPlayerShowDetail = index => {
         let player = this.activeFilter.players[index];
         this.props.navigation.navigate('TrainingDetail', {
             playerLicense: player.playerLicense,
-            playerName: player.playerName
+            playerName: player.playerName,
         });
-    }
-    onPlayerCheckPress = (index) => {
-        this.activeFilter.changePlayerStatus(index, (state) => this.setState(state));
-    }
+    };
+    onPlayerCheckPress = index => {
+        this.activeFilter.changePlayerStatus(index, state => this.setState(state));
+    };
     resetFilters() {
         if (this.filters) {
             for (let key in this.filters) {
@@ -126,27 +128,26 @@ export default class Training extends Component {
             loadingMessage: LocaleStrings.training_load_in_progress,
             diagnose: null,
             seletectedCategory: seletectedCategory,
-            selectedYear: selectedYear
+            selectedYear: selectedYear,
         });
         Controller.fetchPlayers(seletectedCategory.name, (players, error) => {
             if (error) {
                 this.setState({
                     loadingMessage: null,
                     diagnose: {
-                        message: error.message
-                    }
+                        message: error.message,
+                    },
                 });
-            }
-            else {
+            } else {
                 this.allPlayers = players;
                 this.originalStatus = {};
                 this.filterByYear(this.state.selectedYear);
             }
         });
-    }
-    onYearChange = (selectedYear) => {
+    };
+    onYearChange = selectedYear => {
         this.filterByYear(selectedYear);
-    }
+    };
     filterByYear(selectedYear) {
         this.activeFilter = this.filters[selectedYear];
         if (!this.activeFilter) {
@@ -155,27 +156,30 @@ export default class Training extends Component {
         Controller.saveSelectedYear(selectedYear);
         let diagnose = null;
         if (!this.activeFilter.players.length) {
-            let msg = LocaleStrings.training_no_players_for_cat.replace("{0}", this.state.seletectedCategory.name);
+            let msg = LocaleStrings.training_no_players_for_cat.replace('{0}', this.state.seletectedCategory.name);
             diagnose = {
-                severity: "info",
-                message: msg.replace("{1}", selectedYear)
+                severity: 'info',
+                message: msg.replace('{1}', selectedYear),
             };
         }
         let state = {
             selectedYear: selectedYear,
             loadingMessage: null,
-            diagnose: diagnose
+            diagnose: diagnose,
         };
         this.setState(state);
     }
     renderCategory() {
         if (this.categories) {
-            return <Category
-                categories={this.categories}
-                seletectedCategory={this.state.seletectedCategory}
-                selectedYear={this.state.selectedYear}
-                onCategoryChange={this.onCategoryChange}
-                onYearChange={this.onYearChange} />
+            return (
+                <Category
+                    categories={this.categories}
+                    seletectedCategory={this.state.seletectedCategory}
+                    selectedYear={this.state.selectedYear}
+                    onCategoryChange={this.onCategoryChange}
+                    onYearChange={this.onYearChange}
+                />
+            );
         }
     }
     countPresents(players) {
@@ -191,35 +195,50 @@ export default class Training extends Component {
         if (this.categories) {
             let players = this.activeFilter && this.activeFilter.players;
             if (players && players.length) {
-                let saveTitle = "Sauver ( " + this.countPresents(players) + " / " + players.length + " )";
-                let cancelTitle = "Annuler";
+                let saveTitle = 'Sauver ( ' + this.countPresents(players) + ' / ' + players.length + ' )';
+                let cancelTitle = 'Annuler';
 
-                return <View style={{ flex: 1 }}>
-                    <ScrollView style={{ flex: 1 }}>
-                        <TrainingList players={players}
-                            onPlayerShowDetail={this.onPlayerShowDetail}
-                            onPlayerCheckPress={this.onPlayerCheckPress} />
-                    </ScrollView>
-                    {this.renderMessage()}
-                    <View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Button title={saveTitle}
-                            raised
-                            icon={{ name: "done", color: "#FFF" }}
-                            backgroundColor="#0D47A1"
-                            color="#FFF"
-                            style={{ flex: 1 }}
-                            onPress={this.onSubmit}
-                            disabled={!this.activeFilter.dirty} />
-                        <Button title={cancelTitle}
-                            raised
-                            icon={{ name: "undo", color: (this.activeFilter.dirty ? "#0D47A1" : "#FFF") }}
-                            boderColor="#0D47A1"
-                            backgroundColor="#FFF"
-                            color={this.activeFilter.dirty ? "#0D47A1" : "#FFF"}
-                            onPress={this.onCancel}
-                            disabled={!this.activeFilter.dirty} />
+                return (
+                    <View style={{ flex: 1 }}>
+                        <ScrollView style={{ flex: 1 }}>
+                            <TrainingList
+                                players={players}
+                                onPlayerShowDetail={this.onPlayerShowDetail}
+                                onPlayerCheckPress={this.onPlayerCheckPress}
+                            />
+                        </ScrollView>
+                        {this.renderMessage()}
+                        <View
+                            style={{
+                                marginTop: only('android', 15),
+                                marginVertical: only('ios', 15),
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <Button
+                                title={saveTitle}
+                                raised
+                                icon={{ name: 'done', color: '#FFF' }}
+                                backgroundColor="#0D47A1"
+                                color="#FFF"
+                                style={{ flex: only('android', 1) }}
+                                onPress={this.onSubmit}
+                                disabled={!this.activeFilter.dirty}
+                            />
+                            <Button
+                                title={cancelTitle}
+                                raised
+                                icon={{ name: 'undo', color: this.activeFilter.dirty ? '#0D47A1' : '#FFF' }}
+                                boderColor="#0D47A1"
+                                backgroundColor="#FFF"
+                                color={this.activeFilter.dirty ? '#0D47A1' : '#FFF'}
+                                onPress={this.onCancel}
+                                disabled={!this.activeFilter.dirty}
+                            />
+                        </View>
                     </View>
-                </View>;
+                );
             }
         }
         return this.renderMessage();
@@ -227,17 +246,18 @@ export default class Training extends Component {
     renderMessage() {
         if (this.state.diagnose) {
             return <Diagnose message={this.state.diagnose.message} severity={this.state.diagnose.severity} />;
-        }
-        else {
+        } else {
             if (this.state.loadingMessage) {
                 return <LoadingMessage message={this.state.loadingMessage} />;
             }
         }
     }
     render() {
-        return <View style={{ flex: 1 }}>
-            {this.renderCategory()}
-            {this.renderList()}
-        </View >;
+        return (
+            <View style={{ flex: 1 }}>
+                {this.renderCategory()}
+                {this.renderList()}
+            </View>
+        );
     }
 }

@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 import React, { Component } from 'react';
 import { Image } from 'react-native';
-import { Button, FormLabel, FormInput, FormValidationMessage, Icon } from 'react-native-elements';
+import { Button, Input, Icon } from 'react-native-elements';
 import LocaleStrings from '../../resource/localeStrings';
 import { rccConfig } from '../common/config';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
@@ -16,12 +16,12 @@ export default class LoginForm extends Component {
     buildState(init) {
         let state = {
             init: init,
-            error: "",
+            error: '',
             email: rccConfig.email,
             password: rccConfig.password,
-            confirmPassword: rccConfig.modeDebug ? rccConfig.password : "",
+            confirmPassword: rccConfig.modeDebug ? rccConfig.password : '',
             server: rccConfig.server,
-            coachLicense: rccConfig.coachLicense
+            coachLicense: rccConfig.coachLicense,
         };
         return state;
     }
@@ -30,8 +30,7 @@ export default class LoginForm extends Component {
             rccConfig.read(() => {
                 if (rccConfig.authenticated) {
                     this.onAuthenticate();
-                }
-                else {
+                } else {
                     this.setState(this.buildState(true));
                 }
             });
@@ -43,27 +42,25 @@ export default class LoginForm extends Component {
             email: this.state.email,
             password: this.state.password,
         };
-        let error = "";
+        let error = '';
         if (!settings.server) {
-            error += LocaleStrings.login_server_error + "\n";
+            error += LocaleStrings.login_server_error + '\n';
         }
         if (!settings.email) {
-            error += LocaleStrings.login_email_error + "\n";
+            error += LocaleStrings.login_email_error + '\n';
         }
         if (!settings.password) {
             error += LocaleStrings.login_password_error;
-        }
-        else {
+        } else {
             if (settings.password != this.state.confirmPassword) {
                 error += LocaleStrings.login_confirm_password_error;
             }
         }
         if (error) {
             this.setState({
-                error: error
+                error: error,
             });
-        }
-        else {
+        } else {
             this.save(settings);
         }
         event.preventDefault();
@@ -78,18 +75,17 @@ export default class LoginForm extends Component {
     save(data) {
         this.setState({
             authenticationRequested: true,
-            error: ""
+            error: '',
         });
         Request.setSettings(data);
-        Request.post("/changePassword", undefined, (result, error) => {
+        Request.post('/changePassword', undefined, (result, error) => {
             let errorMessage = error && error.message;
             if (errorMessage) {
                 this.setState({
                     authenticationRequested: false,
-                    error: errorMessage
+                    error: errorMessage,
                 });
-            }
-            else {
+            } else {
                 rccConfig.server = data.server;
                 rccConfig.email = data.email;
                 rccConfig.password = data.password;
@@ -102,85 +98,88 @@ export default class LoginForm extends Component {
     renderMessage() {
         if (this.state.authenticationRequested || !this.state.init) {
             return <LoadingMessage message={LocaleStrings.login_validation} />;
-        }
-        else {
-            return <FormValidationMessage>{this.state.error}</FormValidationMessage>;
+        } else {
+            return <Text color="red">{this.state.error}</Text>;
         }
     }
     renderButtons() {
-        let ok = <Button
-            raised
-            onPress={(e) => this.onSubmit(e)}
-            disabled={this.state.authenticationRequested}
-            buttonStyle={{ marginTop: 20 }}
-            backgroundColor="#03a9f4"
-            color="#FFF"
-            title={(rccConfig.authenticated ? LocaleStrings.login_ok : LocaleStrings.login_logon).toUpperCase()} />;
-        let cancel = rccConfig.authenticated && <Button
-            raised
-            onPress={(e) => this.onCancel(e)}
-            disabled={this.state.authenticationRequested}
-            buttonStyle={{ marginTop: 20, marginBottom: 20 }}
-            borderColor="#03a9f4"
-            backgroundColor="#FFF"
-            color="#03a9f4"
-            title={LocaleStrings.login_cancel.toUpperCase()} />;
-        return <View>{ok}{cancel}</View>;
+        let ok = (
+            <Button
+                raised
+                onPress={e => this.onSubmit(e)}
+                disabled={this.state.authenticationRequested}
+                buttonStyle={{ marginTop: 20 }}
+                backgroundColor="#03a9f4"
+                color="#FFF"
+                title={(rccConfig.authenticated ? LocaleStrings.login_ok : LocaleStrings.login_logon).toUpperCase()}
+            />
+        );
+        let cancel = rccConfig.authenticated && (
+            <Button
+                raised
+                onPress={e => this.onCancel(e)}
+                disabled={this.state.authenticationRequested}
+                buttonStyle={{ marginTop: 20, marginBottom: 20 }}
+                borderColor="#03a9f4"
+                backgroundColor="#FFF"
+                color="#03a9f4"
+                title={LocaleStrings.login_cancel.toUpperCase()}
+            />
+        );
+        return (
+            <View>
+                {ok}
+                {cancel}
+            </View>
+        );
     }
     render() {
         if (this.state.init) {
-            return <View style={styles.container}>
-                <View style={styles.title}>
-                    <Image style={styles.titleLogo} source={require('../../resource/logo.png')} />
-                    <Text style={styles.titleText}>Rugby Club Courbevoie</Text>
-                </View>
-                <ScrollView style={{ flex: 1 }}>
-                    <View style={styles.content}>
-                        <View>
-                            <FormLabel>{LocaleStrings.login_server}</FormLabel>
-                            <FormInput
-                                disabled={this.state.authenticationRequested}
-                                autoCapitalize='none'
-                                autoCorrect={false}
-                                autoFocus={true}
-                                keyboardType='email-address'
-                                value={this.state.server}
-                                onChangeText={(text) => this.setState({ server: text })}
-                            />
-                            <FormLabel>{LocaleStrings.login_email}</FormLabel>
-                            <FormInput
-                                disabled={this.state.authenticationRequested}
-                                autoCapitalize='none'
-                                autoCorrect={false}
-                                autoFocus={true}
-                                keyboardType='email-address'
-                                value={this.state.email}
-                                onChangeText={(text) => this.setState({ email: text })}
-                            />
-                            <FormLabel>{LocaleStrings.login_password}</FormLabel>
-                            <FormInput
-                                disabled={this.state.authenticationRequested}
-                                autoCapitalize='none'
-                                autoCorrect={false}
-                                secureTextEntry={true}
-                                value={this.state.password}
-                                onChangeText={(text) => this.setState({ password: text })}
-                            />
-                            <FormLabel>{LocaleStrings.login_confirm_password}</FormLabel>
-                            <FormInput
-                                disabled={this.state.authenticationRequested}
-                                autoCapitalize='none'
-                                autoCorrect={false}
-                                secureTextEntry={true}
-                                value={this.state.confirmPassword}
-                                onChangeText={(text) => this.setState({ confirmPassword: text })}
-                            />
-                        </View>
+            return (
+                <View style={styles.container}>
+                    <View style={styles.title}>
+                        <Image style={styles.titleLogo} source={require('../../resource/logo.png')} />
+                        <Text style={styles.titleText}>Rugby Club Courbevoie</Text>
                     </View>
-                </ScrollView>
-                {this.renderMessage()}
-                {this.renderButtons()}
-            </View>;
+
+                    <ScrollView style={{ flex: 1 }}>
+                        <View style={styles.content}>
+                            <View>
+                                <Input
+                                    label={LocaleStrings.login_email}
+                                    disabled={this.state.authenticationRequested}
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    autoFocus={true}
+                                    keyboardType="email-address"
+                                    value={this.state.email}
+                                    onChangeText={text => this.setState({ email: text })}
+                                />
+                                <Input
+                                    label={LocaleStrings.login_password}
+                                    disabled={this.state.authenticationRequested}
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    secureTextEntry={true}
+                                    value={this.state.password}
+                                    onChangeText={text => this.setState({ password: text })}
+                                />
+                                <Input
+                                    label={LocaleStrings.login_confirm_password}
+                                    disabled={this.state.authenticationRequested}
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    secureTextEntry={true}
+                                    value={this.state.confirmPassword}
+                                    onChangeText={text => this.setState({ confirmPassword: text })}
+                                />
+                            </View>
+                        </View>
+                    </ScrollView>
+                    {this.renderMessage()}
+                    {this.renderButtons()}
+                </View>
+            );
         }
         return this.renderMessage();
     }
@@ -188,38 +187,38 @@ export default class LoginForm extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
     },
     content: {
         flex: 1,
-        justifyContent: "center"
+        justifyContent: 'center',
     },
     form: {
-        justifyContent: "flex-start"
+        justifyContent: 'flex-start',
     },
     title: {
-        flexDirection: "row",
+        flexDirection: 'row',
     },
     titleLogo: {
         margin: 8,
         width: 48,
         height: 48,
-        resizeMode: "contain",
-        borderRadius:24,
-        borderWidth:1
+        resizeMode: 'contain',
+        borderRadius: 24,
+        borderWidth: 1,
     },
     titleText: {
         margin: 20,
         color: '#03a9f4',
-        fontWeight: "bold",
+        fontWeight: 'bold',
         fontSize: 22,
-        textAlign: "center"
+        textAlign: 'center',
     },
     info: {
-        flexDirection: "row"
+        flexDirection: 'row',
     },
     infoIcon: {
-        marginLeft: 20
+        marginLeft: 20,
     },
     infoText: {
         flex: 1,
@@ -229,5 +228,5 @@ const styles = StyleSheet.create({
         marginBottom: 1,
         color: '#03a9f4',
         fontSize: 12,
-    }
+    },
 });

@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 import React, { Component } from 'react';
 import LocaleStrings from '../../resource/localeStrings';
-import { View, Text, ScrollView } from 'react-native';
-import { List, ListItem } from 'react-native-elements';
+import { View, ScrollView } from 'react-native';
+import { ListItem } from 'react-native-elements';
 import NavHeader from '../common/navHeader';
 //import { users } from '../../resource/data/users';
 import * as css from '../../resource/styles';
@@ -10,17 +10,17 @@ import * as css from '../../resource/styles';
 export default class Contacts extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: LocaleStrings.contacts_title,
-        headerTitle: (<NavHeader icon="group" title={LocaleStrings.contacts_title} />),
-        ...css.header
+        headerTitle: <NavHeader icon="group" title={LocaleStrings.contacts_title} />,
+        ...css.header,
     });
-    onLearnMore = (user) => {
+    onLearnMore = user => {
         this.props.navigation.navigate('Details', { ...user });
     };
     render() {
         return (
             <ScrollView>
-                <List>
-                    {users.map((user) => (
+                <View>
+                    {users.map(user => (
                         <ListItem
                             key={user.login.username}
                             roundAvatar
@@ -30,7 +30,7 @@ export default class Contacts extends Component {
                             onPress={() => this.onLearnMore(user)}
                         />
                     ))}
-                </List>
+                </View>
             </ScrollView>
         );
     }

@@ -1,19 +1,19 @@
-"use strict";
+'use strict';
 import React, { Component } from 'react';
-import { List, ListItem } from 'react-native-elements'
+import { View } from 'react-native';
+import { ListItem } from 'react-native-elements';
 import LocaleStrings from '../../resource/localeStrings';
 import { rccConfig } from '../common/config';
-import { View } from 'react-native';
 import * as css from '../../resource/styles';
 import NavHeader from '../common/navHeader';
 
 const screens = [
     {
         title: LocaleStrings.training_title,
-        route: "Training",
-        icon: "school"
+        route: 'Training',
+        icon: 'school',
     },
-    {
+    /*{
         title: LocaleStrings.playerSelect_title,
         route: "PlayerSelect",
         icon: "assignment-ind"
@@ -21,16 +21,17 @@ const screens = [
         title: LocaleStrings.matchCheck_title,
         route: "MatchCheck",
         icon: "assignment-turned-in"
-    },/* {
+    }, {
         title: LocaleStrings.contacts_title,
         route: "ContactsRoute",
         icon: "group"
-    }*/];
+    }*/
+];
 
 export default class Home extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        headerTitle: (<NavHeader icon="home" title={LocaleStrings.home_title} />),
-        ...css.header
+        headerTitle: <NavHeader icon="home" title={LocaleStrings.home_title} />,
+        ...css.header,
     });
     componentDidMount() {
         if (!rccConfig.authenticated) {
@@ -42,15 +43,21 @@ export default class Home extends Component {
     }
     render() {
         if (rccConfig.authenticated) {
-            return <List containerStyle={{ marginBottom: 20 }}>
-                {screens.map((item) =>
-                    <ListItem
-                        key={item.route}
-                        title={item.title}
-                        leftIcon={{ name: item.icon }}
-                        onPress={() => this.onGoTo(item)} />
-                )}
-            </List>
+            // borderTopWidth: see https://github.com/react-native-training/react-native-elements/issues/443
+            return (
+                <View>
+                    <View containerStyle={{ marginBottom: 20, borderTopWidth: 0 }}>
+                        {screens.map(item => (
+                            <ListItem
+                                key={item.route}
+                                title={item.title}
+                                leftIcon={{ name: item.icon }}
+                                onPress={() => this.onGoTo(item)}
+                            />
+                        ))}
+                    </View>
+                </View>
+            );
         }
         return <View />;
     }

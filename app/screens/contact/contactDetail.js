@@ -1,7 +1,7 @@
-"use strict";
-import React, { Component } from 'react';
+'use strict';
+import React, { Component, View } from 'react';
 import { ScrollView } from 'react-native';
-import { Tile, List, ListItem } from 'react-native-elements';
+import { Tile, ListItem } from 'react-native-elements';
 
 export default class ContactDetail extends Component {
     render() {
@@ -16,39 +16,19 @@ export default class ContactDetail extends Component {
                     caption={email}
                 />
 
-                <List>
-                    <ListItem
-                        title="Email"
-                        rightTitle={email}
-                        hideChevron
-                    />
-                    <ListItem
-                        title="Phone"
-                        rightTitle={phone}
-                        hideChevron
-                    />
-                </List>
+                <View>
+                    <ListItem title="Email" rightTitle={email} hideChevron />
+                    <ListItem title="Phone" rightTitle={phone} hideChevron />
+                </View>
 
-                <List>
-                    <ListItem
-                        title="Username"
-                        rightTitle={login.username}
-                        hideChevron
-                    />
-                </List>
+                <View>
+                    <ListItem title="Username" rightTitle={login.username} hideChevron />
+                </View>
 
-                <List>
-                    <ListItem
-                        title="Birthday"
-                        rightTitle={dob}
-                        hideChevron
-                    />
-                    <ListItem
-                        title="City"
-                        rightTitle={location.city}
-                        hideChevron
-                    />
-                </List>
+                <View>
+                    <ListItem title="Birthday" rightTitle={dob} hideChevron />
+                    <ListItem title="City" rightTitle={location.city} hideChevron />
+                </View>
             </ScrollView>
         );
     }

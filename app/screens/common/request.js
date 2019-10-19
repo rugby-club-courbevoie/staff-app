@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 import { Buffer } from 'buffer';
 let settings;
 
@@ -6,12 +6,12 @@ export function setSettings(props) {
     settings = {
         email: props.email,
         password: props.password,
-        server: props.server
+        server: props.server,
     };
 }
 
 function getAuthorization() {
-    return "Basic " + (new Buffer(settings.email + ":" + settings.password).toString('base64'));
+    return 'Basic ' + new Buffer(settings.email + ':' + settings.password).toString('base64');
 }
 
 export function get(url, end) {
@@ -20,7 +20,7 @@ export function get(url, end) {
 
 export function post(url, data, end) {
     let props = {
-        method: 'POST'
+        method: 'POST',
     };
     if (data) {
         props.body = JSON.stringify(data);
@@ -29,7 +29,7 @@ export function post(url, data, end) {
 }
 export function put(url, data, end) {
     let props = {
-        method: 'PUT'
+        method: 'PUT',
     };
     if (data) {
         props.body = JSON.stringify(data);
@@ -39,34 +39,34 @@ export function put(url, data, end) {
 
 function send(url, props, end) {
     if (!props) {
-        props = {}
-    };
+        props = {};
+    }
     props.headers = {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
-        'authorization': getAuthorization()
+        authorization: getAuthorization(),
     };
     fetch(settings.server + url, props)
-        .then((response) => {
+        .then(response => {
             switch (response.status) {
                 case 200:
-                    response.json().then((data) => end(data));
+                    response.json().then(data => end(data));
                     break;
                 case 401:
-                    response.json().then((data) => {
+                    response.json().then(data => {
                         end(null, {
                             status: 401,
-                            message: data.error
+                            message: data.error,
                         });
                     });
                     break;
                 default:
-                    response.text().then((text) => {
-                        console.log("send " + url + ": " + response.status + " body=" + text);
+                    response.text().then(text => {
+                        console.log('send ' + url + ': ' + response.status + ' body=' + text);
                     });
-                    throw new Error("Appel échoué (" + response.status + ") à " + url);
+                    throw new Error('Appel échoué (' + response.status + ') à ' + url);
                     break;
             }
         })
-        .catch((error) => end(null, error));
+        .catch(error => end(null, error));
 }

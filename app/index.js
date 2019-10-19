@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import {RootDrawer} from './navigation/router';
+import { createAppContainer } from 'react-navigation';
+import { RootDrawer } from './navigation/router';
+
+const AppContainer = createAppContainer(RootDrawer);
 
 export default class App extends Component {
-  render() {
-    return <RootDrawer/>;    
-  } 
+    render() {
+        return <AppContainer />;
+    }
 }
