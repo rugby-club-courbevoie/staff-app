@@ -137,6 +137,29 @@ export default class Training extends Component {
         this.filters = {};
         this.activeFilter = null;
     }
+
+    getUniquePlayers(players) {
+        const validPlayers = [];
+        const licenses = {};
+        for (const player of players) {
+            if (licenses[player.playerLicense] === 1) {
+                licenses[player.playerLicense]++;
+            } else {
+                validPlayers.push(player);
+                licenses[player.playerLicense] = 1;
+            }
+        }
+        const duplicateLicenses = Object.keys(licenses).filter(k => licenses[k] > 1);
+        if (duplicateLicenses.length > 0) {
+            this.setState({
+                diagnose: {
+                    message: `duplicate licenses: ${duplicateLicenses.join(', ')}`,
+                },
+            });
+        }
+        return validPlayers;
+    }
+
     onCategoryChange = (seletectedCategory, categories) => {
         let selectedYear = Controller.saveSelectedCategory(seletectedCategory);
         this.allPlayers = [];
@@ -149,6 +172,7 @@ export default class Training extends Component {
             selectedYear: selectedYear,
         });
         Controller.fetchPlayers(seletectedCategory.name, (players, error) => {
+            players = this.getUniquePlayers(players);
             if (error) {
                 this.setState({
                     loadingMessage: null,
@@ -172,7 +196,7 @@ export default class Training extends Component {
             this.filters[selectedYear] = this.activeFilter = new YearFilter(selectedYear, this.allPlayers);
         }
         Controller.saveSelectedYear(selectedYear);
-        let diagnose = null;
+        let diagnose = this.state.diagnose;
         if (!this.activeFilter.players.length) {
             let msg = LocaleStrings.training_no_players_for_cat.replace('{0}', this.state.seletectedCategory.name);
             diagnose = {
@@ -183,7 +207,7 @@ export default class Training extends Component {
         let state = {
             selectedYear: selectedYear,
             loadingMessage: null,
-            diagnose: diagnose,
+            diagnose,
         };
         this.setState(state);
     }
