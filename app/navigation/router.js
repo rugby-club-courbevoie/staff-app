@@ -15,44 +15,61 @@ import { ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import LocaleStrings from '../resource/localeStrings';
 
-export const ContactStack = createBottomTabNavigator({
-    Contacts: {
-        screen: Contacts,
+const navigatorOptions = {
+    tabBarOptions: {
+        style: {
+            height: 30,
+        },
     },
-    Details: {
-        screen: ContactDetail,
-        //navigationOptions: ({ navigation }) => ({
-        //  title: `${navigation.state.params.name.first.toUpperCase()} ${navigation.state.params.name.last.toUpperCase()}`,
-        //}),
-    },
-});
+};
 
-export const TrainingStack = createBottomTabNavigator({
-    Training: {
-        screen: Training,
+export const ContactStack = createBottomTabNavigator(
+    {
+        Contacts: {
+            screen: Contacts,
+        },
+        Details: {
+            screen: ContactDetail,
+            //navigationOptions: ({ navigation }) => ({
+            //  title: `${navigation.state.params.name.first.toUpperCase()} ${navigation.state.params.name.last.toUpperCase()}`,
+            //}),
+        },
     },
-    TrainingDetail: {
-        screen: TrainingDetail,
-    },
-});
+    navigatorOptions,
+);
 
-export const RootStack = createBottomTabNavigator({
-    Home: {
-        screen: Home,
+export const TrainingStack = createBottomTabNavigator(
+    {
+        Training: {
+            screen: Training,
+        },
+        TrainingDetail: {
+            screen: TrainingDetail,
+        },
     },
-    Training: {
-        screen: TrainingStack,
+    navigatorOptions,
+);
+
+export const RootStack = createBottomTabNavigator(
+    {
+        Home: {
+            screen: Home,
+        },
+        Training: {
+            screen: TrainingStack,
+        },
+        PlayerSelect: {
+            screen: PlayerSelect,
+        },
+        MatchCheck: {
+            screen: MatchCheck,
+        },
+        Contacts: {
+            screen: ContactStack,
+        },
     },
-    PlayerSelect: {
-        screen: PlayerSelect,
-    },
-    MatchCheck: {
-        screen: MatchCheck,
-    },
-    Contacts: {
-        screen: ContactStack,
-    },
-});
+    navigatorOptions,
+);
 
 const customDrawerComponent = props => (
     <View
