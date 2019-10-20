@@ -29,9 +29,11 @@ export const ContactStack = createBottomTabNavigator(
     {
         Contacts: {
             screen: Contacts,
+            navigationOptions: { title: 'Contacts' },
         },
         Details: {
             screen: ContactDetail,
+            navigationOptions: { title: 'Détails' },
             //navigationOptions: ({ navigation }) => ({
             //  title: `${navigation.state.params.name.first.toUpperCase()} ${navigation.state.params.name.last.toUpperCase()}`,
             //}),
@@ -44,9 +46,11 @@ export const TrainingStack = createBottomTabNavigator(
     {
         Training: {
             screen: Training,
+            navigationOptions: { title: 'Joueurs' },
         },
         TrainingDetail: {
             screen: TrainingDetail,
+            navigationOptions: { title: 'Détails' },
         },
     },
     navigatorOptions,
@@ -59,15 +63,19 @@ export const RootStack = createBottomTabNavigator(
         },
         Training: {
             screen: TrainingStack,
+            navigationOptions: { title: 'Entraînements' },
         },
         PlayerSelect: {
             screen: PlayerSelect,
+            navigationOptions: { title: 'Sélections' },
         },
         MatchCheck: {
             screen: MatchCheck,
+            navigationOptions: { title: 'Matchs' },
         },
         Contacts: {
             screen: ContactStack,
+            navigationOptions: { title: 'Contacts' },
         },
     },
     navigatorOptions,
