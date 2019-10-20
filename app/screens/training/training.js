@@ -201,13 +201,13 @@ export default class Training extends Component {
 
                 return (
                     <View style={{ flex: 1 }}>
-                        <ScrollView style={{ flex: 1 }}>
+                        <View style={{ flex: 1 }}>
                             <TrainingList
                                 players={players}
                                 onPlayerShowDetail={this.onPlayerShowDetail}
                                 onPlayerCheckPress={this.onPlayerCheckPress}
                             />
-                        </ScrollView>
+                        </View>
                         {this.renderMessage()}
                         <View
                             style={{

@@ -2,9 +2,10 @@
 import React, { Component } from 'react';
 import LocaleStrings from '../../resource/localeStrings';
 import { View, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { ListItem } from 'react-native-elements';
 import NavHeader from '../common/navHeader';
-//import { users } from '../../resource/data/users';
+import { users } from '../../resource/data/users';
 import * as css from '../../resource/styles';
 
 export default class Contacts extends Component {
@@ -18,20 +19,20 @@ export default class Contacts extends Component {
     };
     render() {
         return (
-            <ScrollView>
+            <SafeAreaView>
                 <View>
                     {users.map(user => (
                         <ListItem
-                            key={user.login.username}
+                            key={user.login && user.login.username}
                             roundAvatar
-                            avatar={{ uri: user.picture.thumbnail }}
+                            avatar={{ uri: user.picture && user.picture.thumbnail }}
                             title={`${user.name.first.toUpperCase()} ${user.name.last.toUpperCase()}`}
                             subtitle={user.email}
                             onPress={() => this.onLearnMore(user)}
                         />
                     ))}
                 </View>
-            </ScrollView>
+            </SafeAreaView>
         );
     }
 }

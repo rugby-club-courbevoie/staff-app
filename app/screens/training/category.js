@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Picker, Platform } from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
-//import ModalPicker from 'react-native-modal-picker'
+import ModalSelector from 'react-native-modal-selector';
 import * as css from '../../resource/styles';
 
 const styles = StyleSheet.create({
@@ -60,24 +60,25 @@ export default class Category extends Component {
         );
     }
 
-    /*
     renderIos() {
         const initIndex = this.props.categories.indexOf(this.props.seletectedCategory);
-        return <View style={{paddingVertical: 10}}>
-            <View style={{paddingHorizontal: 10 }}>
-                <ModalPicker selectStyle={{paddingBottom:28, alignItems: 'center'}}
-                    data={this.props.categories.map((cat, i) => ({ key: i, label: cat.name }))}
-                    initValue={initIndex >= 0 ? this.props.categories[initIndex].name : 'Selectionner ...'}
-                    onChange={item => this.onCategoryChange(item.key)}>
-                </ModalPicker>
+        return (
+            <View style={{ paddingVertical: 10 }}>
+                <View style={{ paddingHorizontal: 10 }}>
+                    <ModalSelector
+                        selectStyle={{ paddingBottom: 8, alignItems: 'center' }}
+                        data={this.props.categories.map((cat, i) => ({ key: i, label: cat.name }))}
+                        initValue={initIndex >= 0 ? this.props.categories[initIndex].name : 'Selectionner ...'}
+                        onChange={item => this.onCategoryChange(item.key)}
+                    ></ModalSelector>
+                </View>
+                {this.renderYears()}
             </View>
-            {this.renderYears()}
-        </View>
+        );
     }
-    */
 
     render() {
-        return this.renderDefault();
-        //return Platform.OS === 'ios' ? this.renderIos() : this.renderDefault();
+        //return this.renderDefault();
+        return Platform.OS === 'ios' ? this.renderIos() : this.renderDefault();
     }
 }

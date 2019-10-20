@@ -49,7 +49,7 @@ export const RootStack = createBottomTabNavigator({
     MatchCheck: {
         screen: MatchCheck,
     },
-    ContactsRoute: {
+    Contacts: {
         screen: ContactStack,
     },
 });

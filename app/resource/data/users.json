@@ -1,0 +1,14 @@
+{
+    "users": [
+        {
+            "login": {
+                "username": "john.doe"
+            },
+            "email": "john.doe@acme.com",
+            "name": {
+                "first": "John",
+                "last": "Doe"
+            }
+        }
+    ]
+}
