@@ -101,11 +101,28 @@ export default class Training extends Component {
     onSubmit = () => {
         this.activeFilter.submit(state => this.setState(state));
     };
+
     onPlayerShowDetail = index => {
         let player = this.activeFilter.players[index];
-        this.props.navigation.navigate('TrainingDetail', {
-            playerLicense: player.playerLicense,
-            playerName: player.playerName,
+        this.setState({
+            loadingMessage: 'loading details',
+        });
+        Controller.fetchPlayer(player.playerLicense, (player, error) => {
+            if (error) {
+                this.setState({
+                    loadingMessage: null,
+                    diagnose: {
+                        message: error.message,
+                    },
+                });
+            } else {
+                this.setState({
+                    loadingMessage: null,
+                });
+                this.props.navigation.navigate('TrainingDetail', {
+                    player,
+                });
+            }
         });
     };
     onPlayerCheckPress = index => {

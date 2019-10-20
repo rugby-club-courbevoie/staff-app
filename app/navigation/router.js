@@ -18,7 +18,9 @@ import LocaleStrings from '../resource/localeStrings';
 const navigatorOptions = {
     tabBarOptions: {
         style: {
-            height: 30,
+            //padding: 10,
+            //height: 20,
+            //verticalAlign: 'top',
         },
     },
 };

@@ -99,7 +99,6 @@ export default class TrainingDetail extends Component {
         ),
         ...css.header,
     });
-    player;
     renderPicture(picture, playerName, playerLicense) {
         if (picture) {
             return <Tile imageSrc={{ uri: picture.large }} featured title={playerName} caption={playerLicense} />;
@@ -107,24 +106,10 @@ export default class TrainingDetail extends Component {
     }
     constructor(props) {
         super(props);
-        this.state = {
-            loadingMessage: 'Chargement en cours',
-        };
     }
-    componentDidMount() {
-        Controller.fetchPlayer(this.props.navigation.state.params.playerLicense, (player, error) => {
-            if (error) {
-                this.setState({
-                    loadingMessage: null,
-                    error: error.message,
-                });
-            } else {
-                this.player = player;
-                this.setState({
-                    loadingMessage: null,
-                });
-            }
-        });
+    state = {};
+    get player() {
+        return this.props.navigation.state.params && this.props.navigation.state.params.player;
     }
     //{this.renderPicture(picture, playerName, playerLicense)}
     capitalize(str) {
@@ -144,44 +129,40 @@ export default class TrainingDetail extends Component {
         }
     }
     renderDetail() {
-        if (this.state) {
-            if (this.player) {
-                return (
-                    <ScrollView>
-                        <Card>
-                            <License license={this.player.license} active={this.player.active} />
-                            <Email email={this.player.email} />
-                            <View style={{ flex: 1, flexDirection: 'row', paddingTop: 10, paddingBottom: 10 }}>
-                                <Icon name="home" />
-                                <Text style={{ marginLeft: 15 }}>
-                                    {(this.player.street || '') + ' , ' + this.capitalize(this.player.city)}{' '}
-                                </Text>
-                            </View>
-                        </Card>
-                        {this.renderParent(
-                            this.player.parent1FirstName,
-                            this.player.parent1LastName,
-                            this.player.parent1Email,
-                            this.player.parent1Phone,
-                        )}
-                        {this.renderParent(
-                            this.player.parent2FirstName,
-                            this.player.parent2LastName,
-                            this.player.parent2Email,
-                            this.player.parent2Phone,
-                        )}
-                    </ScrollView>
-                );
-            }
+        if (this.player) {
+            return (
+                <ScrollView>
+                    <Card>
+                        <License license={this.player.license} active={this.player.active} />
+                        <Email email={this.player.email} />
+                        <View style={{ flex: 1, flexDirection: 'row', paddingTop: 10, paddingBottom: 10 }}>
+                            <Icon name="home" />
+                            <Text style={{ marginLeft: 15 }}>
+                                {(this.player.street || '') + ' , ' + this.capitalize(this.player.city)}{' '}
+                            </Text>
+                        </View>
+                    </Card>
+                    {this.renderParent(
+                        this.player.parent1FirstName,
+                        this.player.parent1LastName,
+                        this.player.parent1Email,
+                        this.player.parent1Phone,
+                    )}
+                    {this.renderParent(
+                        this.player.parent2FirstName,
+                        this.player.parent2LastName,
+                        this.player.parent2Email,
+                        this.player.parent2Phone,
+                    )}
+                </ScrollView>
+            );
+        } else {
+            return <Diagnose message={'Aucun joueur sélectionné'} />;
         }
     }
     renderMessage() {
         if (this.state.error) {
             return <Diagnose message={this.state.error} />;
-        } else {
-            if (this.state.loadingMessage) {
-                return <LoadingMessage message={this.state.loadingMessage} />;
-            }
         }
     }
     render() {
