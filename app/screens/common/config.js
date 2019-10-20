@@ -6,7 +6,7 @@ const DEFAULT_SERVER = 'http://vps592276.ovh.net:8124';
 class Config {
     data = {};
     get modeDebug() {
-        return true;
+        return false;
     }
     read(onRead) {
         AsyncStorage.getItem(SERVER_KEY, (error, value) => {
@@ -49,7 +49,7 @@ class Config {
         this.data.password = value;
     }
     get server() {
-        return this.data.server || '';
+        return this.data.server || DEFAULT_SERVER;
     }
     set server(value) {
         this.data.server = value;
