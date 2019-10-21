@@ -5,8 +5,8 @@ import { createDrawerNavigator, DrawerNavigatorItems } from 'react-navigation-dr
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Home from '../screens/home/home';
 import LoginForm from '../screens/login/loginForm';
-import Contacts from '../screens/contact/contacts';
-import ContactDetail from '../screens/contact/contactDetail';
+//import Contacts from '../screens/contact/contacts';
+//import ContactDetail from '../screens/contact/contactDetail';
 import MatchCheck from '../screens/matchCheck/matchCheck';
 import Training from '../screens/training/training';
 import TrainingDetail from '../screens/training/trainingDetail';
@@ -25,6 +25,7 @@ const navigatorOptions = {
     },
 };
 
+/*
 export const ContactStack = createBottomTabNavigator(
     {
         Contacts: {
@@ -41,6 +42,7 @@ export const ContactStack = createBottomTabNavigator(
     },
     navigatorOptions,
 );
+*/
 
 export const TrainingStack = createBottomTabNavigator(
     {
@@ -73,10 +75,12 @@ export const RootStack = createBottomTabNavigator(
             screen: MatchCheck,
             navigationOptions: { title: 'Matchs' },
         },
+        /*
         Contacts: {
             screen: ContactStack,
             navigationOptions: { title: 'Contacts' },
         },
+        */
     },
     navigatorOptions,
 );
