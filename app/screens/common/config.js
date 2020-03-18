@@ -12,19 +12,9 @@ class Config {
         AsyncStorage.getItem(SERVER_KEY, (error, value) => {
             this.data = value && JSON.parse(value);
             if (!this.data) {
-                if (this.modeDebug) {
-                    this.data = {
-                        server: DEFAULT_SERVER,
-                        email: "daniel.coz@sage.com",
-                        password: "RCC-999",
-                        coachLicense: "2001091046249"
-                    };
-                }
-                else {
                     this.data = {
                         server: DEFAULT_SERVER
-                    };
-                }
+                    };                
             }
             onRead();
         });
