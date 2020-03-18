@@ -1,5 +1,5 @@
 "use strict";
-import { rccConfig } from '../common/config';
+import { rccStore } from '../navigation/rccstore';
 import * as Request from '../common/request';
 
 export let settings;
@@ -12,7 +12,7 @@ export function fetchPlayers(category, end) {
     let url = '/presences?event=training'
         + '&date=' + new Date().toISOString().substring(0, 10)
         + '&category=' + category
-        + '&coachLicense=' + rccConfig.coachLicense;
+        + '&coachLicense=' + (rccStore.data.coachLicense || "");
     Request.get(url, end);
 }
 export function fetchPlayer(playerLicense, end) {
@@ -68,7 +68,7 @@ export function filterByYear(year, players) {
 }
 
 export function getDefaultCategory(categories) {
-    let training = rccConfig.training;
+    let training = rccStore.training;
     if (training.category) {
         for (let category of categories) {
             if (training.category == category.name) {
@@ -79,7 +79,7 @@ export function getDefaultCategory(categories) {
     return categories[0];
 }
 export function getDefaultYear(category) {
-    let training = rccConfig.training;
+    let training = rccStore.training;
     if (training.category) {
         let defYear = training.year;
         if (defYear
@@ -92,18 +92,18 @@ export function getDefaultYear(category) {
     return category.year1;
 }
 export function saveSelectedCategory(category) {
-    let training = rccConfig.training;
+    let training = rccStore.training;
     if (training.category != category) {
         training.category = category.name;
         training.year = getDefaultYear(category);
-        rccConfig.write();
+        rccStore.write();
     }
     return training.year;
 }
 export function saveSelectedYear(year) {
-    let training = rccConfig.training;
+    let training = rccStore.training;
     if (training.year != year) {
         training.year = year;
-        rccConfig.write();
+        rccStore.write();
     }
 }

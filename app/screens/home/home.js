@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { List, ListItem } from 'react-native-elements'
 import LocaleStrings from '../../resource/localeStrings';
-import { rccConfig } from '../common/config';
+import { rccStore } from '../navigation/rccstore';
 import { View } from 'react-native';
 import * as css from '../../resource/styles';
 import NavHeader from '../common/navHeader';
@@ -33,7 +33,7 @@ export default class Home extends Component {
         ...css.header
     });
     componentDidMount() {
-        if (!rccConfig.authenticated) {
+        if (!rccStore.authenticated) {
             this.props.navigation.navigate('Login');
         }
     }
@@ -41,7 +41,7 @@ export default class Home extends Component {
         this.props.navigation.navigate(screen.route);
     }
     render() {
-        if (rccConfig.authenticated) {
+        if (rccStore.authenticated) {
             return <List containerStyle={{ marginBottom: 20 }}>
                 {screens.map((item) =>
                     <ListItem

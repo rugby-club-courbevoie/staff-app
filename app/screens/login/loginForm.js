@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Image } from 'react-native';
 import { Button, FormLabel, FormInput, FormValidationMessage, Icon } from 'react-native-elements';
 import LocaleStrings from '../../resource/localeStrings';
-import { rccConfig } from '../common/config';
+import { rccStore } from '../navigation/rccstore';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import * as Request from '../common/request';
 import { LoadingMessage } from '../common/diagnose';
@@ -11,24 +11,24 @@ import { LoadingMessage } from '../common/diagnose';
 export default class LoginForm extends Component {
     constructor(props) {
         super(props);
-        this.state = this.buildState(rccConfig.authenticated);
+        this.state = this.buildState(rccStore.authenticated);
     }
     buildState(init) {
         let state = {
             init: init,
             error: "",
-            email: rccConfig.email,
-            password: rccConfig.password,
-            confirmPassword: rccConfig.modeDebug ? rccConfig.password : "",
-            server: rccConfig.server,
-            coachLicense: rccConfig.coachLicense
+            email: rccStore.data.email || "",
+            password: rccStore.data.password || "",
+            confirmPassword: rccStore.modeDebug ? (rccStore.data.password || "") : "",
+            server: rccStore.data.server || "",
+            coachLicense: rccStore.data.coachLicense ||""
         };
         return state;
     }
     componentDidMount() {
         if (!this.state.init) {
-            rccConfig.read(() => {
-                if (rccConfig.authenticated) {
+            rccStore.read(() => {
+                if (rccStore.authenticated) {
                     this.onAuthenticate();
                 }
                 else {
@@ -72,7 +72,7 @@ export default class LoginForm extends Component {
         this.props.navigation.navigate('HomeRoute');
     }
     onAuthenticate() {
-        Request.setSettings(rccConfig);
+        Request.setSettings(rccStore);
         this.props.navigation.navigate('HomeRoute');
     }
     save(data) {
@@ -90,11 +90,11 @@ export default class LoginForm extends Component {
                 });
             }
             else {
-                rccConfig.server = data.server;
-                rccConfig.email = data.email;
-                rccConfig.password = data.password;
-                rccConfig.coachLicense = result.license;
-                rccConfig.write();
+                rccStore.data.server  = data.server;
+                rccStore.data.email = data.email;
+                rccStore.data.password = data.password;
+                rccStore.data.coachLicense = result.license;
+                rccStore.write();
                 this.onAuthenticate();
             }
         });
@@ -115,8 +115,8 @@ export default class LoginForm extends Component {
             buttonStyle={{ marginTop: 20 }}
             backgroundColor="#03a9f4"
             color="#FFF"
-            title={(rccConfig.authenticated ? LocaleStrings.login_ok : LocaleStrings.login_logon).toUpperCase()} />;
-        let cancel = rccConfig.authenticated && <Button
+            title={(rccStore.authenticated ? LocaleStrings.login_ok : LocaleStrings.login_logon).toUpperCase()} />;
+        let cancel = rccStore.authenticated && <Button
             raised
             onPress={(e) => this.onCancel(e)}
             disabled={this.state.authenticationRequested}
