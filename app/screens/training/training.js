@@ -172,7 +172,6 @@ export default class Training extends Component {
             selectedYear: selectedYear,
         });
         Controller.fetchPlayers(seletectedCategory.name, (players, error) => {
-            players = this.getUniquePlayers(players);
             if (error) {
                 this.setState({
                     loadingMessage: null,
@@ -181,6 +180,7 @@ export default class Training extends Component {
                     },
                 });
             } else {
+                players = this.getUniquePlayers(players);
                 this.allPlayers = players;
                 this.originalStatus = {};
                 this.filterByYear(this.state.selectedYear);
